@@ -1344,6 +1344,8 @@
 
         // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded'); // Debug log
+            
             // Set current week numbers
             const weekNum = getWeekNumber();
             document.querySelectorAll('#currentWeekDisplay, #teacherWeekDisplay').forEach(el => {
@@ -1363,9 +1365,9 @@
                 daySelect.value = todayKey;
             }
             
-            // Initialize role buttons
-            document.querySelector('.role-btn.teacher').onclick = () => showLoginForm('teacher');
-            document.querySelector('.role-btn.student').onclick = () => showLoginForm('student');
+            // Test if functions are available
+            console.log('showLoginForm function:', typeof window.showLoginForm);
+            console.log('login function:', typeof window.login);
         });
 
         // Close modal when clicking outside
