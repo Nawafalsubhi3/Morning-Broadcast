@@ -1,204 +1,46 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>منصة الإذاعة المدرسية</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Noto Kufi Arabic', sans-serif;
-      background: #f0f4f8;
-      color: #333;
-    }
-    header {
-      background: #005c9a;
-      color: white;
-      padding: 1em;
-      text-align: center;
-    }
-    section {
-      display: none;
-      padding: 2em;
-    }
-    .active {
-      display: block;
-    }
-    input, select, button, textarea {
-      width: 100%;
-      padding: 0.75em;
-      margin: 0.5em 0;
-      font-size: 1em;
-    }
-    button {
-      background: #0077b6;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #005c9a;
-    }
-    .card {
-      background: white;
-      padding: 1.5em;
-      border-radius: 8px;
-      margin: 1em 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إذاعتي - طالب</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <header>
+    <img src="assets/logo.png" alt="وزارة التعليم" />
+    <h1>منصة الإذاعة المدرسية</h1>
+  </header>
 
-<header>
-  <img src="https://i.imgur.com/xxxxx.png" alt="شعار وزارة التعليم" height="60">
-  <h1>منصة الإذاعة المدرسية</h1>
-  <p>متوسطة المنذر بن عمرو الأنصاري</p>
-</header>
+  <main>
+    <section id="login">
+      <h2>تسجيل دخول الطالب</h2>
+      <input type="text" id="studentName" placeholder="الاسم الكامل" />
+      <input type="text" id="studentClass" placeholder="الصف" />
+      <input type="text" id="studentId" placeholder="رقم الطالب" />
+      <button onclick="loginStudent()">دخول</button>
+    </section>
 
-<!-- ✅ صفحة الاختيار -->
-<section id="home" class="active">
-  <div class="card">
-    <h2>اختر نوع المستخدم</h2>
-    <button onclick="showSection('student')">أنا طالب</button>
-    <button onclick="showSection('admin')">أنا المعلم (رائد النشاط)</button>
-  </div>
-</section>
+    <section id="segments" style="display:none;">
+      <h2>اختر فقرة تناسبك</h2>
+      <div id="segmentsList"></div>
+    </section>
 
-<!-- ✅ صفحة الطالب -->
-<section id="student">
-  <div class="card">
-    <h2>منصة الطالب</h2>
-    <input type="text" id="studentName" placeholder="اسمك الكامل">
-    <select id="studentClass">
-      <option>اختر صفك</option>
-      <option>الأول متوسط</option>
-      <option>الثاني متوسط</option>
-      <option>الثالث متوسط</option>
-    </select>
-    <select id="daySelect">
-      <option>اختر اليوم</option>
-      <option>الأحد</option>
-      <option>الإثنين</option>
-      <option>الثلاثاء</option>
-      <option>الأربعاء</option>
-      <option>الخميس</option>
-    </select>
-    <select id="segmentSelect">
-      <option>اختر الفقرة</option>
-      <option>آيات من القرآن</option>
-      <option>حديث شريف</option>
-      <option>كلمة اليوم</option>
-      <option>أخبار مدرسية</option>
-      <option>دعاء وخاتمة</option>
-      <option>معلومة سريعة</option>
-      <option>قول مأثور</option>
-      <option>شعر أو إبداع</option>
-      <option>كلمة إنجليزية</option>
-    </select>
-    <textarea id="content" placeholder="اكتب محتوى الفقرة هنا..."></textarea>
-    <button onclick="submitContent()">إرسال إلى المعلم</button>
-    <button onclick="showSection('home')">رجوع</button>
-  </div>
-</section>
+    <section id="chooseDay" style="display:none;">
+      <h2>اختر اليوم المناسب</h2>
+      <select id="daySelect">
+        <option value="الأحد">الأحد</option>
+        <option value="الإثنين">الإثنين</option>
+        <option value="الثلاثاء">الثلاثاء</option>
+        <option value="الأربعاء">الأربعاء</option>
+        <option value="الخميس">الخميس</option>
+      </select>
+      <button onclick="submitChoice()">إرسال الطلب</button>
+    </section>
 
-<!-- ✅ صفحة المعلم -->
-<section id="admin">
-  <div class="card">
-    <h2>لوحة تحكم المعلم</h2>
-    <input type="password" id="adminPass" placeholder="كلمة المرور">
-    <button onclick="loginAdmin()">دخول</button>
-  </div>
+    <p id="statusMsg"></p>
+  </main>
 
-  <div id="adminPanel" class="card" style="display:none;">
-    <h3>محتوى الإذاعة الأسبوعي</h3>
-    <div id="weekTable"></div>
-    <button onclick="logoutAdmin()">خروج</button>
-  </div>
-  <button onclick="showSection('home')">رجوع</button>
-</section>
-
-<!-- ✅ Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAXhbHOc7AdN-vUKPhu9s_jwKf_3lfgXTM",
-    authDomain: "morning-broadcast-school.firebaseapp.com",
-    projectId: "morning-broadcast-school",
-    storageBucket: "morning-broadcast-school.firebasestorage.app",
-    messagingSenderId: "146776297386",
-    appId: "1:146776297386:web:93db14c665d3"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  window.submitContent = async function () {
-    const name = document.getElementById('studentName').value.trim();
-    const cls = document.getElementById('studentClass').value;
-    const day = document.getElementById('daySelect').value;
-    const segment = document.getElementById('segmentSelect').value;
-    const content = document.getElementById('content').value.trim();
-
-    if (!name || !cls || !day || !segment || !content) {
-      alert("يرجى تعبئة جميع الحقول");
-      return;
-    }
-
-    await addDoc(collection(db, "weekContent"), {
-      name,
-      class: cls,
-      day,
-      segment,
-      content,
-      status: "قيد المراجعة",
-      timestamp: new Date()
-    });
-
-    alert("تم الإرسال بنجاح! سيتم مراجعتها من قبل المعلم.");
-    document.getElementById('content').value = "";
-  };
-
-  window.loginAdmin = async function () {
-    const pass = document.getElementById('adminPass').value;
-    if (pass !== "school2025") {
-      alert("كلمة المرور خاطئة");
-      return;
-    }
-    document.getElementById('adminPanel').style.display = 'block';
-    await loadWeekContent();
-  };
-
-  window.loadWeekContent = async function () {
-    const q = query(collection(db, "weekContent"));
-    const snapshot = await getDocs(q);
-    const table = document.getElementById('weekTable');
-    table.innerHTML = "";
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.className = "card";
-      div.innerHTML = `<strong>${data.day}</strong> - ${data.segment}<br>
-        <strong>الطالب:</strong> ${data.name} (${data.class})<br>
-        <strong>المحتوى:</strong> ${data.content}<br>
-        <strong>الحالة:</strong> ${data.status}`;
-      table.appendChild(div);
-    });
-  };
-
-  window.logoutAdmin = function () {
-    document.getElementById('adminPanel').style.display = 'none';
-    document.getElementById('adminPass').value = "";
-  };
-
-  window.showSection = function (id) {
-    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  };
-</script>
-
+  <script type="module" src="js/student.js"></script>
 </body>
 </html>
