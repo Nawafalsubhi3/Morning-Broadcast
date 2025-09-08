@@ -39,361 +39,59 @@
             --text: #1a1a1a;
             --muted: #6c757d;
         }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-        }
-        /* ===== HEADER ===== */
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff;
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 12px rgba(0, 90, 45, .15);
-        }
-        .school-logo {
-            width: 70px;
-            height: 70px;
-            background: #fff;
-            color: var(--primary);
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            margin: 0 auto 15px;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 8px;
-        }
-        .header p {
-            font-size: 1.1rem;
-            opacity: .9;
-        }
-        /* ===== AUTH ===== */
-        .auth-section, .teacher-controls, .records-section {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 12px rgba(0, 90, 45, .08);
-            margin-bottom: 25px;
-        }
-        .role-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .role-btn {
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: .25s;
-        }
-        .role-btn.teacher {
-            background: var(--primary);
-            color: #fff;
-        }
-        .role-btn.student {
-            background: var(--secondary);
-            color: #333;
-        }
-        .role-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
-        }
-        .login-form {
-            display: none;
-            margin-top: 20px;
-        }
-        .login-form.active {
-            display: block;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-        .form-group input, .form-group select, .content-textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border .2s;
-        }
-        .form-group input:focus, .form-group select:focus, .content-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        .login-btn, .btn {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: .25s;
-        }
-        .login-btn:hover, .btn:hover {
-            background: var(--primary-dark);
-        }
-        .btn-danger {
-            background: #dc3545;
-        }
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        .logout-btn {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            background: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 999;
-        }
-        /* ===== DASHBOARDS ===== */
-        .dashboard {
-            display: none;
-        }
-        .dashboard.active {
-            display: block;
-        }
-        /* ===== STUDENT WEEK ===== */
-        .week-days {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-        }
-        .day-card {
-            background: var(--card);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 90, 45, .08);
-            cursor: pointer;
-            transition: .25s;
-            border: 2px solid transparent;
-        }
-        .day-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-        }
-        .day-card.today {
-            border-color: var(--secondary);
-            background: #fffaf0;
-        }
-        .day-header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .day-name {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-        .day-date {
-            color: var(--muted);
-            font-size: .9rem;
-        }
-        .segments-list {
-            list-style: none;
-        }
-        .segment-item {
-            background: #f1f3f5;
-            margin: 6px 0;
-            padding: 10px;
-            border-radius: 6px;
-            border-right: 4px solid var(--primary);
-            cursor: pointer;
-            transition: .2s;
-        }
-        .segment-item.assigned {
-            background: #d4edda;
-            border-right-color: #28a745;
-        }
-        .segment-item:hover {
-            background: #e9ecef;
-        }
-        /* ===== TEACHER ===== */
-        .password-management {
-            background: #fff8e1;
-            border: 1px solid #ffc107;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .password-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 15px;
-        }
-        .password-card {
-            background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
-        }
-        .password-input-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .password-input {
-            flex: 1;
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-        .upload-section {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 25px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: .25s;
-        }
-        .upload-section:hover {
-            border-color: var(--primary);
-            background: #f0f9f4;
-        }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-        .content-textarea {
-            height: 140px;
-            resize: vertical;
-        }
-        /* ===== MODAL ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .45);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-        }
-        .modal.active {
-            display: flex;
-        }
-        .modal-content {
-            background: var(--card);
-            border-radius: 12px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
-        }
-        .close-btn {
-            background: #dc3545;
-            color: #fff;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        .content-area {
-            padding: 20px;
-            line-height: 1.8;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            padding: 15px;
-        }
-        .action-btn {
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: .25s;
-        }
-        .print-btn {
-            background: #17a2b8;
-            color: #fff;
-        }
-        .assign-btn {
-            background: var(--primary);
-            color: #fff;
-        }
-        /* ===== TIPS ===== */
-        .tips-section {
-            background: #fff8e1;
-            border-right: 4px solid var(--secondary);
-            padding: 18px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        .tips-title {
-            color: #856404;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .tip-item {
-            background: #fff;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 6px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
-        }
-        /* ===== FOOTER ===== */
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 18px;
-            color: var(--muted);
-            font-size: .9rem;
-        }
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
-            .role-buttons {
-                flex-direction: column;
-            }
-            .week-days {
-                grid-template-columns: 1fr;
-            }
-        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        .container{max-width:1200px;margin:auto;padding:20px}
+        .header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:12px;padding:30px;text-align:center;margin-bottom:30px;box-shadow:0 2px 12px rgba(0,90,45,.15)}
+        .school-logo{width:70px;height:70px;background:#fff;color:var(--primary);border-radius:50%;display:grid;place-items:center;margin:0 auto 15px;font-size:28px;font-weight:bold}
+        .header h1{font-size:2.2rem;margin-bottom:8px}
+        .header p{font-size:1.1rem;opacity:.9}
+        .auth-section,.teacher-controls,.records-section{background:var(--card);border-radius:12px;padding:25px;box-shadow:0 2px 12px rgba(0,90,45,.08);margin-bottom:25px}
+        .role-buttons{display:flex;gap:15px;justify-content:center;flex-wrap:wrap}
+        .role-btn{border:none;padding:12px 25px;border-radius:8px;font-weight:bold;cursor:pointer;transition:.25s}
+        .role-btn.teacher{background:var(--primary);color:#fff}
+        .role-btn.student{background:var(--secondary);color:#333}
+        .role-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+        .login-form{display:none;margin-top:20px}
+        .login-form.active{display:block}
+        .form-group{margin-bottom:15px}
+        .form-group label{display:block;margin-bottom:6px;font-weight:600}
+        .form-group input,.form-group select,.content-textarea{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:6px;font-size:1rem;transition:border .2s}
+        .form-group input:focus,.form-group select:focus,.content-textarea:focus{outline:none;border-color:var(--primary)}
+        .login-btn,.btn{background:var(--primary);color:#fff;border:none;padding:12px 20px;border-radius:6px;font-weight:bold;cursor:pointer;transition:.25s}
+        .login-btn:hover,.btn:hover{background:var(--primary-dark)}
+        .logout-btn{position:fixed;top:15px;left:15px;background:#dc3545;color:#fff;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;z-index:999}
+        .dashboard{display:none}
+        .dashboard.active{display:block}
+        .week-days{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+        .day-card{background:var(--card);border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(0,90,45,.08);cursor:pointer;transition:.25s;border:2px solid transparent}
+        .day-card:hover{border-color:var(--primary);transform:translateY(-3px)}
+        .day-card.today{border-color:var(--secondary);background:#fffaf0}
+        .day-header{text-align:center;margin-bottom:15px}
+        .day-name{font-size:1.25rem;font-weight:bold}
+        .segments-list{list-style:none}
+        .segment-item{background:#f1f3f5;margin:6px 0;padding:10px;border-radius:6px;border-right:4px solid var(--primary);cursor:pointer;transition:.2s}
+        .segment-item.assigned{background:#d4edda;border-right-color:#28a745}
+        .password-management{background:#fff8e1;border:1px solid var(--secondary);border-radius:10px;padding:20px;margin-bottom:20px}
+        .password-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px}
+        .password-card{background:#fff;padding:15px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+        .password-input-group{display:flex;gap:8px;align-items:center}
+        .password-input{flex:1;padding:8px 10px;border:1px solid #ccc;border-radius:6px}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:15px}
+        .modal.active{display:flex}
+        .modal-content{background:var(--card);border-radius:12px;max-width:600px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;border-bottom:1px solid #eee}
+        .close-btn{background:#dc3545;color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;cursor:pointer}
+        .content-area{padding:20px;line-height:1.8}
+        .action-buttons{display:flex;gap:10px;justify-content:center;padding:15px}
+        .action-btn{border:none;padding:10px 20px;border-radius:6px;font-weight:bold;cursor:pointer;transition:.25s}
+        .print-btn{background:#17a2b8;color:#fff}
+        .assign-btn{background:var(--primary);color:#fff}
+        .tips-section{background:#fff8e1;border-right:4px solid var(--secondary);padding:18px;border-radius:8px;margin-top:20px}
+        .tips-title{color:#856404;font-weight:bold;margin-bottom:10px}
+        .tip-item{background:#fff;padding:10px;margin:8px 0;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+        .footer{text-align:center;margin-top:40px;padding:18px;color:var(--muted);font-size:.9rem}
+        @media(max-width:600px){.role-buttons{flex-direction:column}.week-days{grid-template-columns:1fr}}
     </style>
 </head>
 
@@ -423,8 +121,8 @@
                     <input type="text" id="teacherUsername" placeholder="عبد الله الحربي">
                 </div>
                 <div class="form-group">
-                    <label>الرقم السري الخاص (6 أرقام):</label>
-                    <input type="password" id="teacherPassword" placeholder="مثال: 123456">
+                    <label>الرقم السري (6 خانات):</label>
+                    <input type="password" id="teacherPassword" placeholder="مثال: A2025A">
                 </div>
                 <button class="login-btn" onclick="login('teacher')">دخول</button>
             </div>
@@ -468,14 +166,16 @@
                     <h3>🔐 إدارة كلمات المرور</h3>
                     <div class="password-grid">
                         <div class="password-card">
-                            <h4>الرقم السري للمعلم</h4>
+                            <h4>الرقم السري للمعلم (ثابت)</h4>
+                            <p style="font-size:.9em;color:#666">الحالي: <strong>A2025A</strong></p>
+                            <p>لتغييره أدخل قيمة جديدة:</p>
                             <div class="password-input-group">
-                                <input type="password" id="newTeacherPassword" placeholder="6 أرقام" class="password-input">
-                                <button class="btn btn-danger" onclick="updateTeacherPassword()">تحديث</button>
+                                <input type="password" id="newTeacherPassword" placeholder="6 خانات جديدة" class="password-input">
+                                <button class="btn" onclick="updateTeacherPassword()">تحديث</button>
                             </div>
                         </div>
                         <div class="password-card">
-                            <h4>كلمة المرور الأسبوعية</h4>
+                            <h4>كلمة المرور الأسبوعية للطلاب</h4>
                             <div class="password-input-group">
                                 <input type="text" id="newStudentPassword" placeholder="AB12" class="password-input" style="text-transform:uppercase">
                                 <button class="btn" onclick="generateNewWeekPassword()">إنشاء</button>
@@ -508,23 +208,23 @@
                     </div>
                     <div>
                         <label>نوع الفقرة:</label>
-                        <select id="segmentSelect">
-                            <option value="quran">آيات من القرآن الكريم</option>
-                            <option value="hadith">حديث شريف</option>
-                            <option value="word">كلمة اليوم</option>
-                            <option value="news">الأخبار المدرسية</option>
-                            <option value="info">معلومة سريعة</option>
-                            <option value="wisdom">حكمة أو قول مأثور</option>
-                            <option value="competition">مسابقة قصيرة</option>
-                            <option value="dialogue">حوار أو مشهد تمثيلي</option>
-                            <option value="poetry">ركن الشعر والإبداع</option>
-                            <option value="facts">هل تعلم؟</option>
-                            <option value="english">كلمة بلغة أجنبية</option>
-                            <option value="history">أحداث هذا اليوم في التاريخ</option>
-                            <option value="tech">فقرة تقنية</option>
-                            <option value="health">الصحة والرياضة</option>
-                            <option value="prayer">الدعاء والخاتمة</option>
-                        </select>
+                            <select id="segmentSelect">
+                                <option value="quran">آيات من القرآن الكريم</option>
+                                <option value="hadith">حديث شريف</option>
+                                <option value="word">كلمة اليوم</option>
+                                <option value="news">الأخبار المدرسية</option>
+                                <option value="info">معلومة سريعة</option>
+                                <option value="wisdom">حكمة أو قول مأثور</option>
+                                <option value="competition">مسابقة قصيرة</option>
+                                <option value="dialogue">حوار أو مشهد تمثيلي</option>
+                                <option value="poetry">ركن الشعر والإبداع</option>
+                                <option value="facts">هل تعلم؟</option>
+                                <option value="english">كلمة بلغة أجنبية</option>
+                                <option value="history">أحداث هذا اليوم في التاريخ</option>
+                                <option value="tech">فقرة تقنية</option>
+                                <option value="health">الصحة والرياضة</option>
+                                <option value="prayer">الدعاء والخاتمة</option>
+                            </select>
                     </div>
                 </div>
 
@@ -598,18 +298,20 @@
                 if (role === 'teacher') {
                     const username = document.getElementById('teacherUsername').value.trim();
                     const password = document.getElementById('teacherPassword').value.trim();
-                    if (!username || !/^\d{6}$/.test(password)) return alert('أدخل اسم المستخدم و6 أرقام');
+                    if (!username || password.length !== 6) return alert('أدخل اسم المستخدم و6 خانات بالضبط');
 
                     const teacherRef = doc(db, 'settings', 'teacher');
                     const snap = await getDoc(teacherRef);
-                    if (!snap.exists()) await setDoc(teacherRef, { secretCode: password, username: 'عبد الله الحربي' }, { merge: true });
-                    else if (snap.data().secretCode !== password) return alert('الرقم السري خاطئ');
+                    if (!snap.exists()) await setDoc(teacherRef, { secretCode: 'A2025A', username: 'عبد الله الحربي' }, { merge: true });
 
-                    await signInAnonymously(auth);
-                    currentUser = username; currentRole = 'teacher'; currentUserId = auth.currentUser.uid;
-                    showDashboard('teacher');
-                    await loadWeekContent();
-                    await loadPasswords();
+                    const correct = (await getDoc(teacherRef)).data().secretCode;
+                    if (username === 'عبد الله الحربي' && password === correct) {
+                        await signInAnonymously(auth);
+                        currentUser = username; currentRole = 'teacher'; currentUserId = auth.currentUser.uid;
+                        showDashboard('teacher');
+                        await loadWeekContent();
+                        await loadPasswords();
+                    } else alert('اسم المستخدم أو الرقم السري خاطئ');
                 } else {
                     const name = document.getElementById('studentName').value.trim();
                     const grade = document.getElementById('studentGrade').value.trim();
@@ -645,7 +347,7 @@
         /* ===== PASSWORDS ===== */
         window.updateTeacherPassword = async () => {
             const val = document.getElementById('newTeacherPassword').value.trim();
-            if (!/^\d{6}$/.test(val)) return alert('6 أرقام فقط');
+            if (val.length !== 6) return alert('6 خانات بالضبط');
             await setDoc(doc(db, 'settings', 'teacher'), { secretCode: val }, { merge: true });
             alert('تم تحديث الرقم السري');
             document.getElementById('newTeacherPassword').value = '';
@@ -663,7 +365,7 @@
             if (!/^[A-Z]{2}\d{2}$/.test(val)) return alert('صيغة خاطئة');
             await setDoc(doc(db, 'settings', 'weekPassword'), { password: val, weekNumber: getWeekNumber(), createdAt: new Date().toISOString() }, { merge: true });
             document.getElementById('currentWeekPassword').textContent = val;
-            document.getElementById('currentWeekNumber').textContent = getWeekNumber();
+            document.getElementById('newStudentPassword').value = '';
             alert('تم حفظ كلمة المرور الأسبوعية');
         };
 
@@ -672,23 +374,18 @@
             if (weekSnap.exists()) {
                 document.getElementById('currentWeekPassword').textContent = weekSnap.data().password;
                 document.getElementById('currentWeekNumber').textContent = weekSnap.data().weekNumber;
-            } else {
-                document.getElementById('currentWeekNumber').textContent = getWeekNumber();
-            }
+            } else document.getElementById('currentWeekNumber').textContent = getWeekNumber();
         }
 
         window.printWeekPasswords = () => {
             const pwd = document.getElementById('currentWeekPassword').textContent;
             const wk = getWeekNumber();
-            const printWindow = window.open('', '', 'width=600,height=400');
-            printWindow.document.write(`
-                <html dir="rtl"><head><title>كلمات المرور</title></head><body style="font-family:Arial;text-align:center;padding:30px">
-                <h1>كلمة المرور الأسبوعية</h1><h2>الأسبوع رقم ${wk}</h2><h1 style="color:#007a3d">${pwd}</h1>
-                <p>تاريخ الطباعة: ${new Date().toLocaleString('ar-SA')}</p>
-                </body></html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
+            const win = window.open('', '', 'width=600,height=400');
+            win.document.write(`<html dir="rtl"><head><title>كلمات المرور</title></head><body style="font-family:Arial;text-align:center;padding:30px">
+            <h1>كلمة المرور الأسبوعية</h1><h2>الأسبوع رقم ${wk}</h2><h1 style="color:#007a3d">${pwd}</h1>
+            <p>تاريخ الطباعة: ${new Date().toLocaleString('ar-SA')}</p></body></html>`);
+            win.document.close();
+            win.print();
         };
 
         /* ===== CONTENT ===== */
@@ -719,9 +416,7 @@
                 } else html += '<p>لا محتوى</p>';
                 html += '</div>';
             }
-            document.getElementById('modalTitle').innerHTML = 'معاينة الأسبوع';
-            document.getElementById('modalContent').innerHTML = html;
-            document.getElementById('contentModal').classList.add('active');
+            showModal('معاينة الأسبوع', html);
         };
 
         async function loadWeekContent() {
