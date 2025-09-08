@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>لوحة التحكم - إذاعتي</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <img src="assets/logo.png" alt="وزارة التعليم" />
+    <h1>لوحة تحكم الإذاعة المدرسية</h1>
+  </header>
+
+  <main>
+    <section id="loginAdmin">
+      <h2>تسجيل دخول المعلم</h2>
+      <input type="email" id="adminEmail" placeholder="البريد الإلكتروني" />
+      <input type="password" id="adminPassword" placeholder="كلمة المرور" />
+      <button onclick="loginAdmin()">دخول</button>
+    </section>
+
+    <section id="dashboard" style="display:none;">
+      <h2>إدارة الفقرات</h2>
+      <input type="text" id="segmentTitle" placeholder="عنوان الفقرة" />
+      <textarea id="segmentContent" placeholder="المحتوى"></textarea>
+      <button onclick="addSegment()">إضافة فقرة</button>
+
+      <h2>طلبات الطلاب</h2>
+      <div id="requestsList"></div>
+    </section>
+  </main>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
