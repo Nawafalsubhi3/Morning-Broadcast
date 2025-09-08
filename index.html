@@ -916,12 +916,22 @@
                 if (weekContent[day] && Object.keys(weekContent[day]).length > 0) {
                     for (const segment in weekContent[day]) {
                         const item = weekContent[day][segment];
-                        const assignedStatus = item.assigned ? 
-                            `<span style="color:#28a745">✅ مكلف: ${item.assignedTo}</span>` : 
-                            `<span style="color:#dc3545">⚠️ غير مكلف</span>`;
+                        
+                        let assignedStatus = '';
+                        if (item.assigned) {
+                            const studentInfo = item.studentInfo || {};
+                            const fullStudentInfo = studentInfo.fullInfo || item.assignedTo;
+                            const confirmedIcon = item.confirmed ? '✅' : '⏳';
+                            assignedStatus = `<span style="color:#28a745">${confirmedIcon} ${fullStudentInfo}</span>`;
+                        } else {
+                            assignedStatus = `<span style="color:#dc3545">⚠️ غير مكلف</span>`;
+                        }
                         
                         html += `<div style="margin:10px 0; padding:10px; background:white; border-radius:8px">`;
-                        html += `<strong>${segmentsAr[segment]}</strong> ${assignedStatus}<br>`;
+                        html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap">`;
+                        html += `<strong>${segmentsAr[segment]}</strong>`;
+                        html += assignedStatus;
+                        html += `</div>`;
                         html += `<p style="margin:5px 0; color:#666">${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}</p>`;
                         html += `</div>`;
                     }
@@ -977,36 +987,191 @@
         }
 
         // ===== STUDENT FUNCTIONS =====
+        function updateMyAssignments() {
+            const container = document.getElementById('myAssignments');
+            if (!container) return;
+            
+            let myAssignments = [];
+            
+            // Find assignments for current student
+            for (const day in weekContent) {
+                for (const segment in weekContent[day]) {
+                    const item = weekContent[day][segment];
+                    if (item.assigned && item.assignedTo === currentUser) {
+                        myAssignments.push({
+                            day: day,
+                            segment: segment,
+                            item: item
+                        });
+                    }
+                }
+            }
+            
+            if (myAssignments.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:20px; color:#666">
+                        <p>لم تقم باختيار أي فقرة بعد</p>
+                        <p>اختر من الفقرات المتاحة أدناه</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            myAssignments.forEach(assignment => {
+                const { day, segment, item } = assignment;
+                const isConfirmed = item.confirmed || false;
+                
+                html += `
+                    <div class="assignment-card">
+                        <div class="assignment-header">
+                            <div class="assignment-title">${segmentsAr[segment]}</div>
+                            <div class="assignment-day">${daysAr[day]}</div>
+                        </div>
+                        
+                        <div class="assignment-content">
+                            ${item.content.length > 200 ? item.content.substring(0, 200) + '...' : item.content}
+                        </div>
+                        
+                        <div style="margin-top:15px; text-align:center">
+                            ${isConfirmed ? 
+                                `<div class="status-confirmed">✅ تم التأكيد - جاهز للإلقاء</div>` :
+                                `<button class="confirm-btn" onclick="confirmAssignment('${day}', '${segment}')">
+                                    ✅ تأكيد الاستلام
+                                </button>
+                                <button class="cancel-btn" onclick="cancelAssignment('${day}', '${segment}')">
+                                    ❌ إلغاء التكليف
+                                </button>`
+                            }
+                        </div>
+                        
+                        <div style="margin-top:10px; font-size:0.9em; color:#666; text-align:center">
+                            تم الاختيار: ${new Date(item.assignedAt).toLocaleString('ar-SA')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
         function generateWeekDays() {
             const container = document.getElementById('weekDays');
             if (!container) return;
             
             container.innerHTML = '';
             
-            const today = new Date().getDay();
             const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday'];
             
-            days.forEach((day, index) => {
-                const isToday = (today === index + 1) || (today === 0 && index === 0);
+            days.forEach((day) => {
                 const dayData = weekContent[day] || {};
                 
                 let segmentsHtml = '';
                 if (Object.keys(dayData).length === 0) {
-                    segmentsHtml = '<li class="segment-item">لا يوجد محتوى لهذا اليوم</li>';
+                    segmentsHtml = '<div style="text-align:center; color:#999; padding:20px">لا يوجد محتوى لهذا اليوم</div>';
                 } else {
                     for (const segment in dayData) {
                         const item = dayData[segment];
-                        const assignedClass = item.assigned ? 'assigned' : '';
-                        const assignedIcon = item.assigned ? '✅' : '';
+                        const isAvailable = !item.assigned;
+                        const isMine = item.assigned && item.assignedTo === currentUser;
                         
-                        segmentsHtml += `<li class="segment-item ${assignedClass}" onclick="showSegmentContent('${day}', '${segment}')">
-                            ${segmentsAr[segment]} ${assignedIcon}
-                        </li>`;
+                        if (isMine) continue; // Skip items already assigned to me (shown in my assignments section)
+                        
+                        const statusClass = isAvailable ? 'status-available' : 'status-taken';
+                        const statusText = isAvailable ? 'متاحة' : `مكلف: ${item.assignedTo}`;
+                        const segmentClass = isAvailable ? 'available-segment' : 'available-segment taken';
+                        
+                        segmentsHtml += `
+                            <div class="${segmentClass}" ${isAvailable ? `onclick="selectSegment('${day}', '${segment}')"` : ''}>
+                                <div class="segment-info">
+                                    <div class="segment-name">${segmentsAr[segment]}</div>
+                                    <div class="segment-status ${statusClass}">${statusText}</div>
+                                </div>
+                                <div style="font-size:0.9em; color:#666; margin-top:8px">
+                                    ${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}
+                                </div>
+                                ${isAvailable ? '<div style="text-align:center; margin-top:10px; color:var(--primary); font-weight:bold">اضغط للاختيار</div>' : ''}
+                            </div>
+                        `;
                     }
                 }
                 
+                const today = new Date().getDay();
+                const isToday = (today === days.indexOf(day) + 1) || (today === 0 && day === 'sunday');
+                
                 container.innerHTML += `
-                    <div class="day-card ${isToday ? 'today' : ''}" onclick="showDayContent('${day}')">
+                    <div class="day-card ${isToday ? 'today' : ''}" style="cursor: default">
+                        <div class="day-header">
+                            <div class="day-name">${daysAr[day]} ${isToday ? '(اليوم)' : ''}</div>
+                        </div>
+                        <div>${segmentsHtml}</div>
+                    </div>
+                `;
+            });
+        }
+
+        window.selectSegment = (day, segment) => {
+            const item = weekContent[day][segment];
+            if (!item || item.assigned) return;
+            
+            window.currentSelection = { day, segment };
+            
+            const content = `
+                <div style="text-align:center; margin-bottom:20px">
+                    <div style="background:var(--primary); color:white; padding:15px; border-radius:10px; margin-bottom:15px">
+                        <strong>${daysAr[day]} - ${segmentsAr[segment]}</strong>
+                    </div>
+                </div>
+                
+                <div style="background:#f8f9fa; padding:20px; border-radius:10px; line-height:1.8; margin:15px 0">
+                    ${item.content}
+                </div>
+                
+                <div style="background:#e8f5e8; padding:15px; border-radius:10px; margin:15px 0">
+                    <strong>📝 معلومات مهمة:</strong><br>
+                    • ستكون مسؤولاً عن هذه الفقرة يوم ${daysAr[day]}<br>
+                    • تأكد من حفظ النص جيداً قبل الإلقاء<br>
+                    • احضر قبل الإذاعة بـ 5 دقائق على الأقل<br>
+                    • يمكنك إلغاء التكليف حتى يوم واحد قبل الإذاعة
+                </div>
+                
+                <div style="text-align:center; margin:20px 0">
+                    <p><strong>هل تريد تكليف نفسك بهذه الفقرة؟</strong></p>
+                </div>
+            `;
+            
+            showModal(`اختيار فقرة - ${segmentsAr[segment]}`, content);
+        };
+
+        window.confirmAssignment = (day, segment) => {
+            if (!weekContent[day] || !weekContent[day][segment]) return;
+            
+            weekContent[day][segment].confirmed = true;
+            weekContent[day][segment].confirmedAt = new Date().toISOString();
+            
+            saveToStorage('weekContent', weekContent);
+            updateMyAssignments();
+            
+            showAlert('تم تأكيد استلام الفقرة بنجاح! 🎉');
+        };
+
+        window.cancelAssignment = (day, segment) => {
+            if (!confirm('هل أنت متأكد من إلغاء تكليف هذه الفقرة؟')) return;
+            
+            if (!weekContent[day] || !weekContent[day][segment]) return;
+            
+            weekContent[day][segment].assigned = false;
+            weekContent[day][segment].assignedTo = null;
+            weekContent[day][segment].assignedAt = null;
+            weekContent[day][segment].confirmed = false;
+            weekContent[day][segment].confirmedAt = null;
+            
+            saveToStorage('weekContent', weekContent);
+            updateMyAssignments();
+            generateWeekDays();
+            
+            showAlert('تم إلغاء التكليف بنجاح');
+        }; class="day-card ${isToday ? 'today' : ''}" onclick="showDayContent('${day}')">
                         <div class="day-header">
                             <div class="day-name">${daysAr[day]} ${isToday ? '(اليوم)' : ''}</div>
                         </div>
