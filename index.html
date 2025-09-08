@@ -1,1396 +1,204 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>منصة الإذاعة المدرسية – مدرسة المنذر بن عمرو</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-        :root {
-            --primary: #007a3d;
-            --primary-dark: #005a2d;
-            --secondary: #ffc107;
-            --success: #28a745;
-            --bg: #f5fbf7;
-            --card: #ffffff;
-            --text: #1a1a1a;
-            --muted: #6c757d;
-            --shadow: 0 4px 15px rgba(0,90,45,.1);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
-        }
-
-        .school-logo {
-            width: 80px;
-            height: 80px;
-            background: #fff;
-            color: var(--primary);
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            margin: 0 auto 15px;
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin: 5px 0;
-        }
-
-        .auth-section, .teacher-controls, .records-section {
-            background: var(--card);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
-        }
-
-        .role-selection {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .role-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-
-        .role-btn {
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 200px;
-        }
-
-        .role-btn.teacher {
-            background: var(--primary);
-            color: #fff;
-        }
-
-        .role-btn.student {
-            background: var(--secondary);
-            color: #333;
-        }
-
-        .role-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,.2);
-        }
-
-        .role-btn.active {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,.3);
-        }
-
-        .login-form {
-            display: none;
-            max-width: 500px;
-            margin: 0 auto;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .login-form.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .form-group input, .form-group select, .content-textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #fff;
-        }
-
-        .form-group input:focus, .form-group select:focus, .content-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 122, 61, 0.1);
-        }
-
-        .login-btn, .btn {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .login-btn:hover, .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 999;
-            display: none;
-        }
-
-        .dashboard {
-            display: none;
-        }
-
-        .dashboard.active {
-            display: block;
-        }
-
-        .week-days {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .day-card {
-            background: var(--card);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 3px solid transparent;
-        }
-
-        .day-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,90,45,.2);
-        }
-
-        .day-card.today {
-            border-color: var(--secondary);
-            background: linear-gradient(135deg, #fffaf0, #fff);
-        }
-
-        .day-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .day-name {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .segments-list {
-            list-style: none;
-        }
-
-        .segment-item {
-            background: #f8f9fa;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 10px;
-            border-right: 5px solid var(--primary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .segment-item:hover {
-            background: #e9ecef;
-            transform: translateX(-5px);
-        }
-
-        .segment-item.assigned {
-            background: #d4edda;
-            border-right-color: var(--success);
-            color: #155724;
-        }
-
-        .password-management {
-            background: linear-gradient(135deg, #fff8e1, #fffef7);
-            border: 2px solid var(--secondary);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-
-        .password-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .password-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,.05);
-        }
-
-        .password-input-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .password-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-        }
-
-        .btn-small {
-            padding: 12px 20px;
-            font-size: 0.9rem;
-            border-radius: 8px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--card);
-            border-radius: 20px;
-            max-width: 700px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,.3);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 25px;
-            border-bottom: 2px solid #f0f0f0;
-            background: var(--primary);
-            color: white;
-            border-radius: 20px 20px 0 0;
-        }
-
-        .close-btn {
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .close-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .content-area {
-            padding: 25px;
-            line-height: 1.8;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            padding: 20px;
-            border-top: 2px solid #f0f0f0;
-        }
-
-        .action-btn {
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .print-btn {
-            background: #17a2b8;
-            color: #fff;
-        }
-
-        .assign-btn {
-            background: var(--success);
-            color: #fff;
-        }
-
-        .tips-section {
-            background: linear-gradient(135deg, #fff8e1, #fffef7);
-            border-right: 5px solid var(--secondary);
-            padding: 25px;
-            border-radius: 15px;
-            margin-top: 25px;
-        }
-
-        .tips-title {
-            color: #856404;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-        }
-
-        .tip-item {
-            background: #fff;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.05);
-            border-right: 3px solid var(--secondary);
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 25px;
-            color: var(--muted);
-            font-size: 0.9rem;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .quick-login {
-            background: linear-gradient(135deg, #e8f5e8, #f0f8ff);
-            border: 2px solid var(--primary);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .quick-login h4 {
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        .grade-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .grade-btn {
-            padding: 10px;
-            border: 2px solid var(--primary);
-            background: white;
-            color: var(--primary);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-
-        .grade-btn:hover, .grade-btn.selected {
-            background: var(--primary);
-            color: white;
-        }
-
-        .content-textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        @media (max-width: 768px) {
-            .role-buttons {
-                flex-direction: column;
-            }
-            .week-days {
-                grid-template-columns: 1fr;
-            }
-            .password-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            font-weight: 500;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .current-week {
-            background: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            display: inline-block;
-            margin: 10px 0;
-            font-weight: bold;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        @media (max-width: 600px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>منصة الإذاعة المدرسية</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      background: #f0f4f8;
+      color: #333;
+    }
+    header {
+      background: #005c9a;
+      color: white;
+      padding: 1em;
+      text-align: center;
+    }
+    section {
+      display: none;
+      padding: 2em;
+    }
+    .active {
+      display: block;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      padding: 0.75em;
+      margin: 0.5em 0;
+      font-size: 1em;
+    }
+    button {
+      background: #0077b6;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005c9a;
+    }
+    .card {
+      background: white;
+      padding: 1.5em;
+      border-radius: 8px;
+      margin: 1em 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <header class="header">
-            <div class="school-logo">📻</div>
-            <h1>منصة الإذاعة المدرسية</h1>
-            <p><strong>مدرسة متوسطة المنذر بن عمرو الأنصاري</strong></p>
-            <p>مدير المدرسة: الأستاذ خالد المطيري</p>
-            <p>رائد النشاط: الأستاذ عبد الله الحربي</p>
-        </header>
 
-        <button class="logout-btn" id="logoutBtn">تسجيل خروج</button>
+<header>
+  <img src="https://i.imgur.com/xxxxx.png" alt="شعار وزارة التعليم" height="60">
+  <h1>منصة الإذاعة المدرسية</h1>
+  <p>متوسطة المنذر بن عمرو الأنصاري</p>
+</header>
 
-        <!-- ===== AUTHENTICATION ===== -->
-        <section class="auth-section" id="authSection">
-            <div class="role-selection">
-                <h2>مرحباً بك في منصة الإذاعة المدرسية</h2>
-                <p>اختر نوع الحساب للدخول</p>
-            </div>
+<!-- ✅ صفحة الاختيار -->
+<section id="home" class="active">
+  <div class="card">
+    <h2>اختر نوع المستخدم</h2>
+    <button onclick="showSection('student')">أنا طالب</button>
+    <button onclick="showSection('admin')">أنا المعلم (رائد النشاط)</button>
+  </div>
+</section>
 
-            <div class="role-buttons">
-                <button class="role-btn teacher" onclick="showLoginForm('teacher')">
-                    👨‍🏫 دخول المعلم
-                </button>
-                <button class="role-btn student" onclick="showLoginForm('student')">
-                    👨‍🎓 دخول الطالب
-                </button>
-            </div>
+<!-- ✅ صفحة الطالب -->
+<section id="student">
+  <div class="card">
+    <h2>منصة الطالب</h2>
+    <input type="text" id="studentName" placeholder="اسمك الكامل">
+    <select id="studentClass">
+      <option>اختر صفك</option>
+      <option>الأول متوسط</option>
+      <option>الثاني متوسط</option>
+      <option>الثالث متوسط</option>
+    </select>
+    <select id="daySelect">
+      <option>اختر اليوم</option>
+      <option>الأحد</option>
+      <option>الإثنين</option>
+      <option>الثلاثاء</option>
+      <option>الأربعاء</option>
+      <option>الخميس</option>
+    </select>
+    <select id="segmentSelect">
+      <option>اختر الفقرة</option>
+      <option>آيات من القرآن</option>
+      <option>حديث شريف</option>
+      <option>كلمة اليوم</option>
+      <option>أخبار مدرسية</option>
+      <option>دعاء وخاتمة</option>
+      <option>معلومة سريعة</option>
+      <option>قول مأثور</option>
+      <option>شعر أو إبداع</option>
+      <option>كلمة إنجليزية</option>
+    </select>
+    <textarea id="content" placeholder="اكتب محتوى الفقرة هنا..."></textarea>
+    <button onclick="submitContent()">إرسال إلى المعلم</button>
+    <button onclick="showSection('home')">رجوع</button>
+  </div>
+</section>
 
-            <!-- Teacher Login -->
-            <div class="login-form" id="teacherLogin">
-                <h3 style="text-align:center; color:var(--primary); margin-bottom:20px">دخول رائد النشاط</h3>
-                <div class="form-group">
-                    <label>كلمة المرور الخاصة بالمعلم:</label>
-                    <input type="password" id="teacherPassword" placeholder="أدخل كلمة المرور">
-                </div>
-                <button class="login-btn" onclick="login('teacher')">دخول</button>
-            </div>
+<!-- ✅ صفحة المعلم -->
+<section id="admin">
+  <div class="card">
+    <h2>لوحة تحكم المعلم</h2>
+    <input type="password" id="adminPass" placeholder="كلمة المرور">
+    <button onclick="loginAdmin()">دخول</button>
+  </div>
 
-            <!-- Student Login -->
-            <div class="login-form" id="studentLogin">
-                <h3 style="text-align:center; color:var(--primary); margin-bottom:20px">دخول الطالب</h3>
-                
-                <div class="quick-login">
-                    <h4>دخول سريع حسب الصف</h4>
-                    <p>اختر صفك للدخول المباشر</p>
-                    <div class="grade-buttons">
-                        <button class="grade-btn" onclick="quickLogin('الأول متوسط')">الأول متوسط</button>
-                        <button class="grade-btn" onclick="quickLogin('الثاني متوسط')">الثاني متوسط</button>
-                        <button class="grade-btn" onclick="quickLogin('الثالث متوسط')">الثالث متوسط</button>
-                    </div>
-                </div>
+  <div id="adminPanel" class="card" style="display:none;">
+    <h3>محتوى الإذاعة الأسبوعي</h3>
+    <div id="weekTable"></div>
+    <button onclick="logoutAdmin()">خروج</button>
+  </div>
+  <button onclick="showSection('home')">رجوع</button>
+</section>
 
-                <div style="text-align:center; margin:20px 0; color:var(--muted)">
-                    أو
-                </div>
+<!-- ✅ Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-                <div class="form-group">
-                    <label>اسم الطالب:</label>
-                    <input type="text" id="studentName" placeholder="أدخل اسمك الكامل">
-                </div>
-                <div class="form-group">
-                    <label>الصف:</label>
-                    <select id="studentGrade">
-                        <option value="">اختر الصف</option>
-                        <option value="الأول متوسط">الأول متوسط</option>
-                        <option value="الثاني متوسط">الثاني متوسط</option>
-                        <option value="الثالث متوسط">الثالث متوسط</option>
-                    </select>
-                </div>
-                <button class="login-btn" onclick="login('student')">دخول</button>
-            </div>
-        </section>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXhbHOc7AdN-vUKPhu9s_jwKf_3lfgXTM",
+    authDomain: "morning-broadcast-school.firebaseapp.com",
+    projectId: "morning-broadcast-school",
+    storageBucket: "morning-broadcast-school.firebasestorage.app",
+    messagingSenderId: "146776297386",
+    appId: "1:146776297386:web:93db14c665d3"
+  };
 
-        <!-- ===== STUDENT DASHBOARD ===== -->
-        <section class="dashboard" id="studentDashboard">
-            <div style="text-align:center; margin-bottom:30px">
-                <h2>مرحباً <span id="studentNameDisplay"></span></h2>
-                <div class="current-week">الأسبوع الحالي: <span id="currentWeekDisplay"></span></div>
-            </div>
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-            <div class="week-days" id="weekDays"></div>
-            
-            <div class="tips-section">
-                <div class="tips-title">💡 نصائح للإلقاء المميز</div>
-                <div class="tip-item">📢 تحدث ببطء ووضوح، واحرص على مخارج الحروف</div>
-                <div class="tip-item">🎵 استخدم نبرات صوت متنوعة لجذب الانتباه</div>
-                <div class="tip-item">😊 قف بثقة، وابتسم، وواصل التواصل البصري</div>
-                <div class="tip-item">📖 اقرأ النص أكثر من مرة قبل الإلقاء</div>
-                <div class="tip-item">⏰ تدرب على التوقيت المناسب لكل فقرة</div>
-            </div>
-        </section>
+  window.submitContent = async function () {
+    const name = document.getElementById('studentName').value.trim();
+    const cls = document.getElementById('studentClass').value;
+    const day = document.getElementById('daySelect').value;
+    const segment = document.getElementById('segmentSelect').value;
+    const content = document.getElementById('content').value.trim();
 
-        <!-- ===== TEACHER DASHBOARD ===== -->
-        <section class="dashboard" id="teacherDashboard">
-            <div class="teacher-controls">
-                <h2>لوحة تحكم رائد النشاط</h2>
-                <div class="current-week">الأسبوع الحالي: <span id="teacherWeekDisplay"></span></div>
+    if (!name || !cls || !day || !segment || !content) {
+      alert("يرجى تعبئة جميع الحقول");
+      return;
+    }
 
-                <div class="password-management">
-                    <h3>🔐 إدارة كلمات المرور</h3>
-                    <div class="password-grid">
-                        <div class="password-card">
-                            <h4>كلمة المرور الخاصة بالمعلم</h4>
-                            <p style="font-size:0.9em; color:#666; margin:10px 0">الحالية: <strong id="currentTeacherPassword">school2025</strong></p>
-                            <div class="password-input-group">
-                                <input type="password" id="newTeacherPassword" placeholder="كلمة مرور جديدة" class="password-input">
-                                <button class="btn btn-small" onclick="updateTeacherPassword()">تحديث</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    await addDoc(collection(db, "weekContent"), {
+      name,
+      class: cls,
+      day,
+      segment,
+      content,
+      status: "قيد المراجعة",
+      timestamp: new Date()
+    });
 
-                <div class="form-grid">
-                    <div>
-                        <label>اليوم:</label>
-                        <select id="daySelect">
-                            <option value="sunday">الأحد</option>
-                            <option value="monday">الاثنين</option>
-                            <option value="tuesday">الثلاثاء</option>
-                            <option value="wednesday">الأربعاء</option>
-                            <option value="thursday">الخميس</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>نوع الفقرة:</label>
-                        <select id="segmentSelect">
-                            <option value="quran">آيات من القرآن الكريم</option>
-                            <option value="hadith">حديث شريف</option>
-                            <option value="word">كلمة اليوم</option>
-                            <option value="news">الأخبار المدرسية</option>
-                            <option value="info">معلومة سريعة</option>
-                            <option value="wisdom">حكمة أو قول مأثور</option>
-                            <option value="competition">مسابقة قصيرة</option>
-                            <option value="dialogue">حوار أو مشهد تمثيلي</option>
-                            <option value="poetry">ركن الشعر والإبداع</option>
-                            <option value="facts">هل تعلم؟</option>
-                            <option value="english">كلمة بلغة أجنبية</option>
-                            <option value="history">أحداث هذا اليوم في التاريخ</option>
-                            <option value="tech">فقرة تقنية</option>
-                            <option value="health">الصحة والرياضة</option>
-                            <option value="prayer">الدعاء والخاتمة</option>
-                        </select>
-                    </div>
-                </div>
+    alert("تم الإرسال بنجاح! سيتم مراجعتها من قبل المعلم.");
+    document.getElementById('content').value = "";
+  };
 
-                <div class="form-group">
-                    <label>محتوى الفقرة:</label>
-                    <textarea id="contentArea" class="content-textarea" placeholder="اكتب محتوى الفقرة هنا..."></textarea>
-                </div>
+  window.loginAdmin = async function () {
+    const pass = document.getElementById('adminPass').value;
+    if (pass !== "school2025") {
+      alert("كلمة المرور خاطئة");
+      return;
+    }
+    document.getElementById('adminPanel').style.display = 'block';
+    await loadWeekContent();
+  };
 
-                <div style="text-align:center; margin:20px 0">
-                    <button class="btn" onclick="saveContent()">💾 حفظ المحتوى</button>
-                    <button class="btn" onclick="previewWeek()">👁️ معاينة الأسبوع</button>
-                </div>
-            </div>
+  window.loadWeekContent = async function () {
+    const q = query(collection(db, "weekContent"));
+    const snapshot = await getDocs(q);
+    const table = document.getElementById('weekTable');
+    table.innerHTML = "";
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement('div');
+      div.className = "card";
+      div.innerHTML = `<strong>${data.day}</strong> - ${data.segment}<br>
+        <strong>الطالب:</strong> ${data.name} (${data.class})<br>
+        <strong>المحتوى:</strong> ${data.content}<br>
+        <strong>الحالة:</strong> ${data.status}`;
+      table.appendChild(div);
+    });
+  };
 
-            <div class="records-section">
-                <h3>📋 سجل المحتوى المحفوظ</h3>
-                <div id="recordsList"></div>
-            </div>
-        </section>
+  window.logoutAdmin = function () {
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('adminPass').value = "";
+  };
 
-        <!-- ===== MODAL ===== -->
-        <div class="modal" id="contentModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 id="modalTitle"></h3>
-                    <button class="close-btn" onclick="closeModal()">&times;</button>
-                </div>
-                <div class="content-area" id="modalContent"></div>
-                <div class="action-buttons" id="modalActions">
-                    <button class="action-btn print-btn" onclick="printContent()">🖨️ طباعة</button>
-                    <button class="action-btn assign-btn" onclick="assignToMe()">✋ سأقوم بهذه الفقرة</button>
-                </div>
-            </div>
-        </div>
+  window.showSection = function (id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  };
+</script>
 
-        <footer class="footer">
-            <p>تصميم وتنفيذ: Nawaf Alsubhi</p>
-            <p>منصة الإذاعة المدرسية - جميع الحقوق محفوظة</p>
-        </footer>
-    </div>
-
-    <script>
-        // ===== GLOBAL STATE =====
-        let currentUser = null;
-        let currentRole = null;
-        let weekContent = {};
-        let assignments = {};
-
-        // ===== UTILITY FUNCTIONS =====
-        const daysAr = {
-            sunday: 'الأحد',
-            monday: 'الاثنين', 
-            tuesday: 'الثلاثاء',
-            wednesday: 'الأربعاء',
-            thursday: 'الخميس'
-        };
-
-        const segmentsAr = {
-            quran: 'آيات من القرآن الكريم',
-            hadith: 'حديث شريف',
-            word: 'كلمة اليوم',
-            news: 'الأخبار المدرسية',
-            info: 'معلومة سريعة',
-            wisdom: 'حكمة أو قول مأثور',
-            competition: 'مسابقة قصيرة',
-            dialogue: 'حوار أو مشهد تمثيلي',
-            poetry: 'ركن الشعر والإبداع',
-            facts: 'هل تعلم؟',
-            english: 'كلمة بلغة أجنبية',
-            history: 'أحداث هذا اليوم في التاريخ',
-            tech: 'فقرة تقنية',
-            health: 'الصحة والرياضة',
-            prayer: 'الدعاء والخاتمة'
-        };
-
-        function getWeekNumber() {
-            const now = new Date();
-            const start = new Date(now.getFullYear(), 0, 1);
-            return Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
-        }
-
-        function showAlert(message, type = 'success') {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.textContent = message;
-            
-            const container = document.querySelector('.container');
-            container.insertBefore(alertDiv, container.firstChild);
-            
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 3000);
-        }
-
-        function saveToStorage(key, data) {
-            const storage = JSON.parse(localStorage.getItem('schoolBroadcast') || '{}');
-            storage[key] = data;
-            localStorage.setItem('schoolBroadcast', JSON.stringify(storage));
-        }
-
-        function loadFromStorage(key) {
-            const storage = JSON.parse(localStorage.getItem('schoolBroadcast') || '{}');
-            return storage[key] || null;
-        }
-
-        // ===== AUTHENTICATION =====
-        window.showLoginForm = (role) => {
-            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
-            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById(role + 'Login').classList.add('active');
-            document.querySelector(`.role-btn.${role}`).classList.add('active');
-        };
-
-        window.quickLogin = (grade) => {
-            document.getElementById('studentGrade').value = grade;
-            document.getElementById('studentName').value = 'طالب من ' + grade;
-            
-            // Visual feedback
-            document.querySelectorAll('.grade-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-            
-            login('student');
-        };
-
-        window.login = (role) => {
-            if (role === 'teacher') {
-                const password = document.getElementById('teacherPassword').value.trim();
-                const savedPassword = loadFromStorage('teacherPassword') || 'school2025';
-                
-                if (!password) {
-                    showAlert('يرجى إدخال كلمة المرور', 'error');
-                    return;
-                }
-                
-                if (password === savedPassword) {
-                    currentUser = 'رائد النشاط';
-                    currentRole = 'teacher';
-                    showDashboard('teacher');
-                    loadWeekContent();
-                    showAlert('مرحباً رائد النشاط!');
-                } else {
-                    showAlert('كلمة المرور غير صحيحة', 'error');
-                }
-            } else {
-                const name = document.getElementById('studentName').value.trim();
-                const grade = document.getElementById('studentGrade').value;
-                
-                if (!name || !grade) {
-                    showAlert('يرجى إدخال الاسم واختيار الصف', 'error');
-                    return;
-                }
-                
-                currentUser = name;
-                currentRole = 'student';
-                showDashboard('student');
-                loadWeekContent();
-                generateWeekDays();
-                showAlert(`مرحباً ${name}!`);
-            }
-        };
-
-        function showDashboard(role) {
-            document.getElementById('authSection').style.display = 'none';
-            document.getElementById(role + 'Dashboard').classList.add('active');
-            document.getElementById('logoutBtn').style.display = 'block';
-            
-            if (role === 'student') {
-                document.getElementById('studentNameDisplay').textContent = currentUser;
-                document.getElementById('currentWeekDisplay').textContent = getWeekNumber();
-            } else {
-                document.getElementById('teacherWeekDisplay').textContent = getWeekNumber();
-                loadSavedPasswords();
-            }
-        }
-
-        document.getElementById('logoutBtn').onclick = () => {
-            if (confirm('هل تريد تسجيل الخروج؟')) {
-                location.reload();
-            }
-        };
-
-        // ===== PASSWORD MANAGEMENT =====
-        window.updateTeacherPassword = () => {
-            const newPassword = document.getElementById('newTeacherPassword').value.trim();
-            
-            if (!newPassword || newPassword.length < 4) {
-                showAlert('كلمة المرور يجب أن تكون 4 أحرف على الأقل', 'error');
-                return;
-            }
-            
-            saveToStorage('teacherPassword', newPassword);
-            document.getElementById('currentTeacherPassword').textContent = newPassword;
-            document.getElementById('newTeacherPassword').value = '';
-            showAlert('تم تحديث كلمة المرور بنجاح');
-        };
-
-        function loadSavedPasswords() {
-            const savedPassword = loadFromStorage('teacherPassword') || 'school2025';
-            document.getElementById('currentTeacherPassword').textContent = savedPassword;
-        }
-
-        // ===== CONTENT MANAGEMENT =====
-        window.saveContent = () => {
-            const day = document.getElementById('daySelect').value;
-            const segment = document.getElementById('segmentSelect').value;
-            const content = document.getElementById('contentArea').value.trim();
-            
-            if (!content) {
-                showAlert('يرجى إدخال محتوى الفقرة', 'error');
-                return;
-            }
-            
-            if (!weekContent[day]) {
-                weekContent[day] = {};
-            }
-            
-            weekContent[day][segment] = {
-                content: content,
-                assigned: false,
-                assignedTo: null,
-                createdAt: new Date().toISOString(),
-                createdBy: currentUser
-            };
-            
-            saveToStorage('weekContent', weekContent);
-            document.getElementById('contentArea').value = '';
-            showAlert('تم حفظ المحتوى بنجاح');
-            updateRecordsList();
-        };
-
-        window.previewWeek = () => {
-            let html = '<div style="text-align:center"><h3>معاينة إذاعة الأسبوع</h3></div>';
-            
-            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday'];
-            
-            for (const day of days) {
-                html += `<div style="margin:20px 0; padding:20px; background:#f8f9fa; border-radius:10px; border-right:5px solid var(--primary)">`;
-                html += `<h4 style="color:var(--primary); margin-bottom:15px">${daysAr[day]}</h4>`;
-                
-                if (weekContent[day] && Object.keys(weekContent[day]).length > 0) {
-                    for (const segment in weekContent[day]) {
-                        const item = weekContent[day][segment];
-                        
-                        let assignedStatus = '';
-                        if (item.assigned) {
-                            const studentInfo = item.studentInfo || {};
-                            const fullStudentInfo = studentInfo.fullInfo || item.assignedTo;
-                            const confirmedIcon = item.confirmed ? '✅' : '⏳';
-                            assignedStatus = `<span style="color:#28a745">${confirmedIcon} ${fullStudentInfo}</span>`;
-                        } else {
-                            assignedStatus = `<span style="color:#dc3545">⚠️ غير مكلف</span>`;
-                        }
-                        
-                        html += `<div style="margin:10px 0; padding:10px; background:white; border-radius:8px">`;
-                        html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap">`;
-                        html += `<strong>${segmentsAr[segment]}</strong>`;
-                        html += assignedStatus;
-                        html += `</div>`;
-                        html += `<p style="margin:5px 0; color:#666">${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}</p>`;
-                        html += `</div>`;
-                    }
-                } else {
-                    html += '<p style="color:#999; font-style:italic">لا يوجد محتوى محفوظ</p>';
-                }
-                
-                html += '</div>';
-            }
-            
-            showModal('معاينة الأسبوع', html);
-            document.getElementById('modalActions').style.display = 'none';
-        };
-
-        function updateRecordsList() {
-            const recordsList = document.getElementById('recordsList');
-            if (!recordsList) return;
-            
-            let html = '';
-            
-            if (Object.keys(weekContent).length === 0) {
-                html = '<p style="text-align:center; color:#999; font-style:italic">لا يوجد محتوى محفوظ</p>';
-            } else {
-                for (const day in weekContent) {
-                    for (const segment in weekContent[day]) {
-                        const item = weekContent[day][segment];
-                        const assignedStatus = item.assigned ? 
-                            `<span style="color:#28a745">✅ ${item.assignedTo}</span>` : 
-                            `<span style="color:#dc3545">⚠️ غير مكلف</span>`;
-                        
-                        html += `<div style="margin:10px 0; padding:15px; background:#f8f9fa; border-radius:10px; border-right:4px solid var(--primary)">`;
-                        html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">`;
-                        html += `<strong>${daysAr[day]} - ${segmentsAr[segment]}</strong>`;
-                        html += assignedStatus;
-                        html += `</div>`;
-                        html += `<p style="color:#666; margin:5px 0">${item.content.substring(0, 150)}${item.content.length > 150 ? '...' : ''}</p>`;
-                        html += `<small style="color:#999">تم الإنشاء: ${new Date(item.createdAt).toLocaleString('ar-SA')}</small>`;
-                        html += `</div>`;
-                    }
-                }
-            }
-            
-            recordsList.innerHTML = html;
-        }
-
-        function loadWeekContent() {
-            weekContent = loadFromStorage('weekContent') || {};
-            assignments = loadFromStorage('assignments') || {};
-            
-            if (currentRole === 'teacher') {
-                updateRecordsList();
-            }
-        }
-
-        // ===== STUDENT FUNCTIONS =====
-        function updateMyAssignments() {
-            const container = document.getElementById('myAssignments');
-            if (!container) return;
-            
-            let myAssignments = [];
-            
-            // Find assignments for current student
-            for (const day in weekContent) {
-                for (const segment in weekContent[day]) {
-                    const item = weekContent[day][segment];
-                    if (item.assigned && item.assignedTo === currentUser) {
-                        myAssignments.push({
-                            day: day,
-                            segment: segment,
-                            item: item
-                        });
-                    }
-                }
-            }
-            
-            if (myAssignments.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:20px; color:#666">
-                        <p>لم تقم باختيار أي فقرة بعد</p>
-                        <p>اختر من الفقرات المتاحة أدناه</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '';
-            myAssignments.forEach(assignment => {
-                const { day, segment, item } = assignment;
-                const isConfirmed = item.confirmed || false;
-                
-                html += `
-                    <div class="assignment-card">
-                        <div class="assignment-header">
-                            <div class="assignment-title">${segmentsAr[segment]}</div>
-                            <div class="assignment-day">${daysAr[day]}</div>
-                        </div>
-                        
-                        <div class="assignment-content">
-                            ${item.content.length > 200 ? item.content.substring(0, 200) + '...' : item.content}
-                        </div>
-                        
-                        <div style="margin-top:15px; text-align:center">
-                            ${isConfirmed ? 
-                                `<div class="status-confirmed">✅ تم التأكيد - جاهز للإلقاء</div>` :
-                                `<button class="confirm-btn" onclick="confirmAssignment('${day}', '${segment}')">
-                                    ✅ تأكيد الاستلام
-                                </button>
-                                <button class="cancel-btn" onclick="cancelAssignment('${day}', '${segment}')">
-                                    ❌ إلغاء التكليف
-                                </button>`
-                            }
-                        </div>
-                        
-                        <div style="margin-top:10px; font-size:0.9em; color:#666; text-align:center">
-                            تم الاختيار: ${new Date(item.assignedAt).toLocaleString('ar-SA')}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        function generateWeekDays() {
-            const container = document.getElementById('weekDays');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday'];
-            
-            days.forEach((day) => {
-                const dayData = weekContent[day] || {};
-                
-                let segmentsHtml = '';
-                if (Object.keys(dayData).length === 0) {
-                    segmentsHtml = '<div style="text-align:center; color:#999; padding:20px">لا يوجد محتوى لهذا اليوم</div>';
-                } else {
-                    for (const segment in dayData) {
-                        const item = dayData[segment];
-                        const isAvailable = !item.assigned;
-                        const isMine = item.assigned && item.assignedTo === currentUser;
-                        
-                        if (isMine) continue; // Skip items already assigned to me (shown in my assignments section)
-                        
-                        const statusClass = isAvailable ? 'status-available' : 'status-taken';
-                        const statusText = isAvailable ? 'متاحة' : `مكلف: ${item.assignedTo}`;
-                        const segmentClass = isAvailable ? 'available-segment' : 'available-segment taken';
-                        
-                        segmentsHtml += `
-                            <div class="${segmentClass}" ${isAvailable ? `onclick="selectSegment('${day}', '${segment}')"` : ''}>
-                                <div class="segment-info">
-                                    <div class="segment-name">${segmentsAr[segment]}</div>
-                                    <div class="segment-status ${statusClass}">${statusText}</div>
-                                </div>
-                                <div style="font-size:0.9em; color:#666; margin-top:8px">
-                                    ${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}
-                                </div>
-                                ${isAvailable ? '<div style="text-align:center; margin-top:10px; color:var(--primary); font-weight:bold">اضغط للاختيار</div>' : ''}
-                            </div>
-                        `;
-                    }
-                }
-                
-                const today = new Date().getDay();
-                const isToday = (today === days.indexOf(day) + 1) || (today === 0 && day === 'sunday');
-                
-                container.innerHTML += `
-                    <div class="day-card ${isToday ? 'today' : ''}" style="cursor: default">
-                        <div class="day-header">
-                            <div class="day-name">${daysAr[day]} ${isToday ? '(اليوم)' : ''}</div>
-                        </div>
-                        <div>${segmentsHtml}</div>
-                    </div>
-                `;
-            });
-        }
-
-        window.selectSegment = (day, segment) => {
-            const item = weekContent[day][segment];
-            if (!item || item.assigned) return;
-            
-            window.currentSelection = { day, segment };
-            
-            const content = `
-                <div style="text-align:center; margin-bottom:20px">
-                    <div style="background:var(--primary); color:white; padding:15px; border-radius:10px; margin-bottom:15px">
-                        <strong>${daysAr[day]} - ${segmentsAr[segment]}</strong>
-                    </div>
-                </div>
-                
-                <div style="background:#f8f9fa; padding:20px; border-radius:10px; line-height:1.8; margin:15px 0">
-                    ${item.content}
-                </div>
-                
-                <div style="background:#e8f5e8; padding:15px; border-radius:10px; margin:15px 0">
-                    <strong>📝 معلومات مهمة:</strong><br>
-                    • ستكون مسؤولاً عن هذه الفقرة يوم ${daysAr[day]}<br>
-                    • تأكد من حفظ النص جيداً قبل الإلقاء<br>
-                    • احضر قبل الإذاعة بـ 5 دقائق على الأقل<br>
-                    • يمكنك إلغاء التكليف حتى يوم واحد قبل الإذاعة
-                </div>
-                
-                <div style="text-align:center; margin:20px 0">
-                    <p><strong>هل تريد تكليف نفسك بهذه الفقرة؟</strong></p>
-                </div>
-            `;
-            
-            showModal(`اختيار فقرة - ${segmentsAr[segment]}`, content);
-        };
-
-        window.confirmAssignment = (day, segment) => {
-            if (!weekContent[day] || !weekContent[day][segment]) return;
-            
-            weekContent[day][segment].confirmed = true;
-            weekContent[day][segment].confirmedAt = new Date().toISOString();
-            
-            saveToStorage('weekContent', weekContent);
-            updateMyAssignments();
-            
-            showAlert('تم تأكيد استلام الفقرة بنجاح! 🎉');
-        };
-
-        window.cancelAssignment = (day, segment) => {
-            if (!confirm('هل أنت متأكد من إلغاء تكليف هذه الفقرة؟')) return;
-            
-            if (!weekContent[day] || !weekContent[day][segment]) return;
-            
-            weekContent[day][segment].assigned = false;
-            weekContent[day][segment].assignedTo = null;
-            weekContent[day][segment].assignedAt = null;
-            weekContent[day][segment].confirmed = false;
-            weekContent[day][segment].confirmedAt = null;
-            
-            saveToStorage('weekContent', weekContent);
-            updateMyAssignments();
-            generateWeekDays();
-            
-            showAlert('تم إلغاء التكليف بنجاح');
-        }; class="day-card ${isToday ? 'today' : ''}" onclick="showDayContent('${day}')">
-                        <div class="day-header">
-                            <div class="day-name">${daysAr[day]} ${isToday ? '(اليوم)' : ''}</div>
-                        </div>
-                        <ul class="segments-list">${segmentsHtml}</ul>
-                    </div>
-                `;
-            });
-        }
-
-        window.showDayContent = (day) => {
-            const dayData = weekContent[day];
-            if (!dayData || Object.keys(dayData).length === 0) {
-                showAlert('لا يوجد محتوى لهذا اليوم', 'error');
-                return;
-            }
-            
-            let html = `<div style="text-align:center"><h3>إذاعة ${daysAr[day]}</h3></div>`;
-            
-            for (const segment in dayData) {
-                const item = dayData[segment];
-                const assignedStatus = item.assigned ? 
-                    `<p style="color:#28a745; font-weight:bold">✅ مكلف: ${item.assignedTo}</p>` : 
-                    `<p style="color:#dc3545; font-weight:bold">⚠️ لم يتم التكليف بعد</p>`;
-                
-                html += `<div style="margin:20px 0; padding:15px; background:#f8f9fa; border-radius:10px">`;
-                html += `<h4 style="color:var(--primary); margin-bottom:10px">${segmentsAr[segment]}</h4>`;
-                html += `<div style="line-height:1.8; text-align:right">${item.content}</div>`;
-                html += assignedStatus;
-                html += `</div>`;
-            }
-            
-            showModal(`إذاعة ${daysAr[day]}`, html);
-            document.getElementById('modalActions').style.display = 'none';
-        };
-
-        window.showSegmentContent = (day, segment) => {
-            const item = weekContent[day][segment];
-            if (!item) return;
-            
-            window.currentSelection = { day, segment };
-            
-            const assignedStatus = item.assigned ? 
-                `<div style="margin:15px 0; padding:10px; background:#d4edda; border-radius:8px; color:#155724">
-                    <strong>✅ هذه الفقرة مكلف بها: ${item.assignedTo}</strong>
-                </div>` : 
-                `<div style="margin:15px 0; padding:10px; background:#f8d7da; border-radius:8px; color:#721c24">
-                    <strong>⚠️ هذه الفقرة لم يتم التكليف بها بعد</strong>
-                </div>`;
-            
-            const content = `
-                <p style="background:var(--primary); color:white; padding:10px; border-radius:8px; text-align:center">
-                    <strong>${daysAr[day]} - ${segmentsAr[segment]}</strong>
-                </p>
-                <div style="line-height:1.8; margin:20px 0; padding:15px; background:#f8f9fa; border-radius:10px">
-                    ${item.content}
-                </div>
-                ${assignedStatus}
-            `;
-            
-            showModal(segmentsAr[segment], content);
-            
-            // Show assign button only if not assigned or if assigned to current user
-            const modalActions = document.getElementById('modalActions');
-            if (!item.assigned) {
-                modalActions.style.display = 'flex';
-            } else if (item.assignedTo === currentUser) {
-                modalActions.style.display = 'flex';
-                document.querySelector('.assign-btn').textContent = '✅ ملغي التكليف';
-                document.querySelector('.assign-btn').onclick = () => unassignFromMe();
-            } else {
-                modalActions.style.display = 'none';
-            }
-        };
-
-        // ===== MODAL FUNCTIONS =====
-        function showModal(title, content) {
-            document.getElementById('modalTitle').innerHTML = title;
-            document.getElementById('modalContent').innerHTML = content;
-            document.getElementById('contentModal').classList.add('active');
-            
-            // Reset assign button
-            const assignBtn = document.querySelector('.assign-btn');
-            assignBtn.textContent = '✋ سأقوم بهذه الفقرة';
-            assignBtn.onclick = () => assignToMe();
-        }
-
-        window.closeModal = () => {
-            document.getElementById('contentModal').classList.remove('active');
-            window.currentSelection = null;
-        };
-
-        window.printContent = () => {
-            const title = document.getElementById('modalTitle').innerHTML;
-            const content = document.getElementById('modalContent').innerHTML;
-            
-            const printWindow = window.open('', '', 'width=700,height=600');
-            printWindow.document.write(`
-                <html dir="rtl">
-                <head>
-                    <title>${title}</title>
-                    <style>
-                        body { font-family: Arial; padding: 20px; line-height: 1.8; }
-                        .header { text-align: center; margin-bottom: 30px; }
-                        .content { margin: 20px 0; }
-                        @media print { 
-                            .no-print { display: none; }
-                            body { margin: 0; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>منصة الإذاعة المدرسية</h1>
-                        <h2>مدرسة متوسطة المنذر بن عمرو الأنصاري</h2>
-                        <hr>
-                    </div>
-                    <div class="content">${content}</div>
-                    <div style="margin-top: 30px; text-align: center; font-size: 0.9em; color: #666;">
-                        تاريخ الطباعة: ${new Date().toLocaleString('ar-SA')}
-                    </div>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-                printWindow.close();
-            }, 250);
-        };
-
-        window.assignToMe = () => {
-            if (!window.currentSelection) return;
-            
-            const { day, segment } = window.currentSelection;
-            if (!weekContent[day] || !weekContent[day][segment]) return;
-            
-            weekContent[day][segment].assigned = true;
-            weekContent[day][segment].assignedTo = currentUser;
-            weekContent[day][segment].assignedAt = new Date().toISOString();
-            
-            saveToStorage('weekContent', weekContent);
-            
-            showAlert(`تم تكليفك بفقرة "${segmentsAr[segment]}" في يوم ${daysAr[day]}`);
-            closeModal();
-            
-            if (currentRole === 'student') {
-                generateWeekDays();
-            }
-        };
-
-        window.unassignFromMe = () => {
-            if (!window.currentSelection) return;
-            
-            const { day, segment } = window.currentSelection;
-            if (!weekContent[day] || !weekContent[day][segment]) return;
-            
-            weekContent[day][segment].assigned = false;
-            weekContent[day][segment].assignedTo = null;
-            weekContent[day][segment].assignedAt = null;
-            
-            saveToStorage('weekContent', weekContent);
-            
-            showAlert('تم إلغاء تكليفك من هذه الفقرة');
-            closeModal();
-            
-            if (currentRole === 'student') {
-                generateWeekDays();
-            }
-        };
-
-        // ===== INITIALIZATION =====
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM loaded'); // Debug log
-            
-            // Set current week numbers
-            const weekNum = getWeekNumber();
-            document.querySelectorAll('#currentWeekDisplay, #teacherWeekDisplay').forEach(el => {
-                if (el) el.textContent = weekNum;
-            });
-            
-            // Load content
-            loadWeekContent();
-            
-            // Set today's day in teacher dashboard
-            const today = new Date().getDay();
-            const dayMapping = {0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday'};
-            const todayKey = dayMapping[today] || 'sunday';
-            
-            const daySelect = document.getElementById('daySelect');
-            if (daySelect) {
-                daySelect.value = todayKey;
-            }
-            
-            // Test if functions are available
-            console.log('showLoginForm function:', typeof window.showLoginForm);
-            console.log('login function:', typeof window.login);
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('contentModal').addEventListener('click', (e) => {
-            if (e.target.id === 'contentModal') {
-                closeModal();
-            }
-        });
-
-        // Auto-uppercase for student password input (if we add it back later)
-        const studentPasswordInput = document.getElementById('studentPassword');
-        if (studentPasswordInput) {
-            studentPasswordInput.addEventListener('input', (e) => {
-                e.target.value = e.target.value.toUpperCase();
-            });
-        }
-
-        // Add keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('contentModal').classList.contains('active')) {
-                closeModal();
-            }
-        });
-    </script>
 </body>
 </html>
