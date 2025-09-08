@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>منصة الإذاعة المدرسية – مدرسة المنذر بن عمرو</title>
+    <title>منصة الإذاعة المدرسية - مدرسة المنذر بن عمرو</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Firebase 9 Modular -->
@@ -31,72 +31,514 @@
 
     <style>
         :root {
-            --primary: #007a3d;
-            --primary-dark: #005a2d;
-            --secondary: #ffc107;
-            --bg: #f5fbf7;
+            --primary: #1e3a5f;
+            --primary-light: #2c5282;
+            --secondary: #3182ce;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #e53e3e;
+            --bg: #f8fafe;
             --card: #ffffff;
-            --text: #1a1a1a;
-            --muted: #6c757d;
+            --text: #2c3e50;
+            --muted: #718096;
+            --border: #cbd5e0;
         }
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-        .container{max-width:1200px;margin:auto;padding:20px}
-        .header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:12px;padding:30px;text-align:center;margin-bottom:30px;box-shadow:0 2px 12px rgba(0,90,45,.15)}
-        .school-logo{width:70px;height:70px;background:#fff;color:var(--primary);border-radius:50%;display:grid;place-items:center;margin:0 auto 15px;font-size:28px;font-weight:bold}
-        .header h1{font-size:2.2rem;margin-bottom:8px}
-        .header p{font-size:1.1rem;opacity:.9}
-        .auth-section,.teacher-controls,.records-section{background:var(--card);border-radius:12px;padding:25px;box-shadow:0 2px 12px rgba(0,90,45,.08);margin-bottom:25px}
-        .role-buttons{display:flex;gap:15px;justify-content:center;flex-wrap:wrap}
-        .role-btn{border:none;padding:12px 25px;border-radius:8px;font-weight:bold;cursor:pointer;transition:.25s}
-        .role-btn.teacher{background:var(--primary);color:#fff}
-        .role-btn.student{background:var(--secondary);color:#333}
-        .role-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
-        .login-form{display:none;margin-top:20px}
-        .login-form.active{display:block}
-        .form-group{margin-bottom:15px}
-        .form-group label{display:block;margin-bottom:6px;font-weight:600}
-        .form-group input,.form-group select,.content-textarea{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:6px;font-size:1rem;transition:border .2s}
-        .form-group input:focus,.form-group select:focus,.content-textarea:focus{outline:none;border-color:var(--primary)}
-        .login-btn,.btn{background:var(--primary);color:#fff;border:none;padding:12px 20px;border-radius:6px;font-weight:bold;cursor:pointer;transition:.25s}
-        .login-btn:hover,.btn:hover{background:var(--primary-dark)}
-        .logout-btn{position:fixed;top:15px;left:15px;background:#dc3545;color:#fff;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;z-index:999}
-        .dashboard{display:none}
-        .dashboard.active{display:block}
-        .week-days{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
-        .day-card{background:var(--card);border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(0,90,45,.08);cursor:pointer;transition:.25s;border:2px solid transparent}
-        .day-card:hover{border-color:var(--primary);transform:translateY(-3px)}
-        .day-card.today{border-color:var(--secondary);background:#fffaf0}
-        .day-header{text-align:center;margin-bottom:15px}
-        .day-name{font-size:1.25rem;font-weight:bold}
-        .segments-list{list-style:none}
-        .segment-item{background:#f1f3f5;margin:6px 0;padding:10px;border-radius:6px;border-right:4px solid var(--primary);cursor:pointer;transition:.2s}
-        .segment-item.assigned{background:#d4edda;border-right-color:#28a745}
-        .password-management{background:#fff8e1;border:1px solid var(--secondary);border-radius:10px;padding:20px;margin-bottom:20px}
-        .password-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px}
-        .password-card{background:#fff;padding:15px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-        .password-input-group{display:flex;gap:8px;align-items:center}
-        .password-input{flex:1;padding:8px 10px;border:1px solid #ccc;border-radius:6px}
-        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:15px}
-        .modal.active{display:flex}
-        .modal-content{background:var(--card);border-radius:12px;max-width:600px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;border-bottom:1px solid #eee}
-        .close-btn{background:#dc3545;color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;cursor:pointer}
-        .content-area{padding:20px;line-height:1.8}
-        .action-buttons{display:flex;gap:10px;justify-content:center;padding:15px}
-        .action-btn{border:none;padding:10px 20px;border-radius:6px;font-weight:bold;cursor:pointer;transition:.25s}
-        .print-btn{background:#17a2b8;color:#fff}
-        .assign-btn{background:var(--primary);color:#fff}
-        .tips-section{background:#fff8e1;border-right:4px solid var(--secondary);padding:18px;border-radius:8px;margin-top:20px}
-        .tips-title{color:#856404;font-weight:bold;margin-bottom:10px}
-        .tip-item{background:#fff;padding:10px;margin:8px 0;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-        .footer{text-align:center;margin-top:40px;padding:18px;color:var(--muted);font-size:.9rem}
-        @media(max-width:600px){.role-buttons{flex-direction:column}.week-days{grid-template-columns:1fr}}
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, #e8f4f8 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.15);
+        }
+
+        .school-logo {
+            width: 70px;
+            height: 70px;
+            background: var(--success);
+            color: #fff;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        /* ===== AUTHENTICATION ===== */
+        .auth-section, .teacher-controls, .records-section {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.08);
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .role-btn {
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .role-btn.teacher {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .role-btn.student {
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        .role-btn:hover, .role-btn.active {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.25);
+        }
+
+        .login-form {
+            display: none;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid var(--border);
+        }
+
+        .login-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+
+        .form-group input, .form-group select, .content-textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--card);
+        }
+
+        .form-group input:focus, .form-group select:focus, .content-textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .login-btn, .btn {
+            background: var(--success);
+            color: #fff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .login-btn:hover, .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-primary { background: var(--primary); }
+        .btn-secondary { background: var(--secondary); }
+        .btn-warning { background: var(--warning); }
+        .btn-danger { background: var(--danger); }
+
+        .btn-primary:hover { box-shadow: 0 6px 20px rgba(30, 58, 95, 0.3); }
+        .btn-secondary:hover { box-shadow: 0 6px 20px rgba(49, 130, 206, 0.3); }
+        .btn-warning:hover { box-shadow: 0 6px 20px rgba(237, 137, 54, 0.3); }
+        .btn-danger:hover { box-shadow: 0 6px 20px rgba(229, 62, 62, 0.3); }
+
+        /* ===== LOGOUT BUTTON ===== */
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.3);
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        /* ===== STUDENT DASHBOARD ===== */
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .day-card {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .day-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(44, 62, 80, 0.15);
+        }
+
+        .day-card.today {
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(72, 187, 120, 0.05), var(--card));
+        }
+
+        .day-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .day-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-light);
+            margin-bottom: 8px;
+        }
+
+        .day-date {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .segments-list {
+            list-style: none;
+        }
+
+        .segment-item {
+            background: rgba(49, 130, 206, 0.05);
+            margin: 8px 0;
+            padding: 14px;
+            border-radius: 10px;
+            border-right: 4px solid var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .segment-item:hover {
+            background: rgba(49, 130, 206, 0.1);
+            transform: translateX(-8px);
+        }
+
+        .segment-item.assigned {
+            background: rgba(72, 187, 120, 0.1);
+            border-right-color: var(--success);
+        }
+
+        /* ===== TEACHER DASHBOARD ===== */
+        .password-management {
+            background: linear-gradient(135deg, rgba(237, 137, 54, 0.05), rgba(221, 107, 32, 0.05));
+            border: 2px solid var(--warning);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .password-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .password-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.08);
+            border: 1px solid var(--border);
+        }
+
+        .password-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .password-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+        }
+
+        .upload-section {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, rgba(49, 130, 206, 0.02), rgba(116, 179, 206, 0.02));
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: var(--secondary);
+            background: linear-gradient(135deg, rgba(49, 130, 206, 0.05), rgba(116, 179, 206, 0.05));
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .content-textarea {
+            height: 150px;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+
+        /* ===== TIPS SECTION ===== */
+        .tips-section {
+            background: linear-gradient(135deg, rgba(237, 137, 54, 0.05), rgba(221, 107, 32, 0.05));
+            border-right: 4px solid var(--warning);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border: 1px solid rgba(237, 137, 54, 0.2);
+        }
+
+        .tips-title {
+            color: #c05621;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .tip-item {
+            background: var(--card);
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.08);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .tip-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.12);
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(44, 62, 80, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card);
+            border-radius: 15px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(44, 62, 80, 0.25);
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .close-btn {
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.3);
+        }
+
+        .content-area {
+            padding: 25px;
+            line-height: 1.8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .print-btn {
+            background: #0bc5ea;
+            color: #fff;
+        }
+
+        .assign-btn {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--muted);
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 252, 0.9));
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .role-buttons {
+                flex-direction: column;
+            }
+
+            .week-days {
+                grid-template-columns: 1fr;
+            }
+
+            .password-grid, .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <!-- ===== HEADER ===== -->
         <header class="header">
             <div class="school-logo">📻</div>
             <h1>منصة الإذاعة المدرسية</h1>
@@ -105,6 +547,7 @@
             <p>رائد النشاط: الأستاذ عبد الله الحربي</p>
         </header>
 
+        <!-- ===== LOGOUT BUTTON ===== -->
         <button class="logout-btn" id="logoutBtn" style="display:none">تسجيل خروج</button>
 
         <!-- ===== AUTHENTICATION ===== -->
@@ -114,21 +557,26 @@
                 <button class="role-btn student" onclick="showLoginForm('student')">دخول الطالب</button>
             </div>
 
+            <!-- Teacher Login -->
             <div class="login-form" id="teacherLogin">
-                <h3 style="text-align:center;color:var(--primary)">دخول رائد النشاط</h3>
+                <h3 style="text-align:center; color:var(--primary); margin-bottom:20px">دخول رائد النشاط</h3>
                 <div class="form-group">
                     <label>اسم المستخدم:</label>
-                    <input type="text" id="teacherUsername" placeholder="abdullah">
+                    <input type="text" id="teacherUsername" placeholder="abdullah" value="abdullah">
                 </div>
                 <div class="form-group">
                     <label>الرقم السري (6 خانات):</label>
-                    <input type="password" id="teacherPassword" placeholder="A2025A">
+                    <input type="password" id="teacherPassword" placeholder="A2025A" value="A2025A">
                 </div>
-                <button type="button" class="login-btn" onclick="login('teacher')">دخول</button>
+                <button class="login-btn" onclick="login('teacher')">دخول</button>
+                <p style="text-align: center; color: var(--muted); font-size: 0.9em; margin-top: 15px;">
+                    💡 اسم المستخدم: abdullah | الرقم السري: A2025A
+                </p>
             </div>
 
+            <!-- Student Login -->
             <div class="login-form" id="studentLogin">
-                <h3 style="text-align:center;color:var(--primary)">دخول الطالب</h3>
+                <h3 style="text-align:center; color:var(--secondary); margin-bottom:20px">دخول الطالب</h3>
                 <div class="form-group">
                     <label>اسم الطالب:</label>
                     <input type="text" id="studentName" placeholder="أدخل اسمك">
@@ -139,9 +587,12 @@
                 </div>
                 <div class="form-group">
                     <label>كلمة المرور الأسبوعية (حرفين + رقمين):</label>
-                    <input type="text" id="studentPassword" placeholder="AB12" style="text-transform:uppercase">
+                    <input type="text" id="studentPassword" placeholder="مثال: AB12" style="text-transform:uppercase">
                 </div>
-                <button type="button" class="login-btn" onclick="login('student')">دخول</button>
+                <button class="login-btn" onclick="login('student')">دخول</button>
+                <p style="text-align: center; color: var(--muted); font-size: 0.9em; margin-top: 15px;">
+                    🔑 احصل على كلمة المرور من رائد النشاط
+                </p>
             </div>
         </section>
 
@@ -150,51 +601,70 @@
             <div class="week-days" id="weekDays"></div>
             <div class="tips-section">
                 <div class="tips-title">💡 نصائح للإلقاء المميز</div>
-                <div class="tip-item">تحدث ببطء ووضوح، واحرص على مخارج الحروف.</div>
-                <div class="tip-item">استخدم نبرات صوت متنوعة لجذب الانتباه.</div>
-                <div class="tip-item">قف بثقة، وابتسم، وواصل التواصل البصري.</div>
-                <div class="tip-item">اقرأ النص أكثر من مرة قبل الإلقاء.</div>
+                <div class="tip-item">
+                    <strong>الوضوح في النطق:</strong> تحدث ببطء ووضوح، واحرص على مخارج الحروف
+                </div>
+                <div class="tip-item">
+                    <strong>التنغيم والتعبير:</strong> استخدم نبرات صوت متنوعة لجذب الانتباه
+                </div>
+                <div class="tip-item">
+                    <strong>الثقة بالنفس:</strong> قف بثقة، وابتسم، وواصل التواصل البصري
+                </div>
+                <div class="tip-item">
+                    <strong>التحضير المسبق:</strong> اقرأ النص أكثر من مرة قبل الإلقاء
+                </div>
             </div>
         </section>
 
         <!-- ===== TEACHER DASHBOARD ===== -->
         <section class="dashboard" id="teacherDashboard">
             <div class="teacher-controls">
-                <h2>لوحة تحكم رائد النشاط</h2>
+                <h2 style="color: var(--primary); margin-bottom: 25px">لوحة تحكم رائد النشاط</h2>
 
+                <!-- Password Management -->
                 <div class="password-management">
-                    <h3>🔐 إدارة كلمات المرور</h3>
+                    <h3 style="color: #c05621; margin-bottom: 20px">🔐 إدارة كلمات المرور</h3>
                     <div class="password-grid">
                         <div class="password-card">
-                            <h4>الرقم السري للمعلم (ثابت)</h4>
-                            <p style="font-size:.9em;color:#666">الحالي: <strong>A2025A</strong></p>
-                            <p>لتغييره أدخل قيمة جديدة:</p>
+                            <h4 style="color: var(--primary); margin-bottom: 10px">الرقم السري للمعلم</h4>
+                            <p style="font-size: 0.9em; color: var(--muted); margin-bottom: 10px">
+                                الحالي: <strong>A2025A</strong>
+                            </p>
+                            <p style="margin-bottom: 10px">لتغييره أدخل قيمة جديدة:</p>
                             <div class="password-input-group">
                                 <input type="password" id="newTeacherPassword" placeholder="6 خانات جديدة" class="password-input">
-                                <button class="btn" onclick="updateTeacherPassword()">تحديث</button>
+                                <button class="btn btn-danger" onclick="updateTeacherPassword()">تحديث</button>
                             </div>
                         </div>
+
                         <div class="password-card">
-                            <h4>كلمة المرور الأسبوعية للطلاب</h4>
+                            <h4 style="color: var(--secondary); margin-bottom: 10px">كلمة المرور الأسبوعية للطلاب</h4>
                             <div class="password-input-group">
                                 <input type="text" id="newStudentPassword" placeholder="AB12" class="password-input" style="text-transform:uppercase">
-                                <button class="btn" onclick="generateNewWeekPassword()">إنشاء</button>
+                                <button class="btn btn-secondary" onclick="generateNewWeekPassword()">إنشاء</button>
                                 <button class="btn btn-success" onclick="updateWeekPassword()">حفظ</button>
                             </div>
-                            <p style="margin-top:8px;font-size:.8em">الحالية: <strong id="currentWeekPassword">----</strong> | الأسبوع: <span id="currentWeekNumber"></span></p>
+                            <p style="margin-top: 10px; font-size: 0.85em; color: var(--muted)">
+                                الحالية: <strong id="currentWeekPassword">----</strong> | 
+                                الأسبوع: <span id="currentWeekNumber"></span>
+                            </p>
                         </div>
                     </div>
-                    <div style="margin-top:15px">
-                        <button class="btn btn-info" onclick="printWeekPasswords()">🖨️ طباعة كلمات المرور</button>
+
+                    <div style="text-align: center">
+                        <button class="btn btn-warning" onclick="printWeekPasswords()">🖨️ طباعة كلمات المرور</button>
                     </div>
                 </div>
 
+                <!-- File Upload -->
                 <div class="upload-section">
                     <h3>رفع ملفات الإذاعة (PDF/Word/نص)</h3>
                     <input type="file" id="fileInput" class="file-input" accept=".pdf,.doc,.docx,.txt" multiple>
-                    <button class="btn" onclick="document.getElementById('fileInput').click()">📁 اختر ملفات</button>
+                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">📁 اختر ملفات</button>
+                    <p style="margin-top: 10px; color: var(--muted)">يمكنك رفع ملفات PDF, DOC, DOCX, TXT</p>
                 </div>
 
+                <!-- Content Form -->
                 <div class="form-grid">
                     <div>
                         <label>اليوم:</label>
@@ -208,37 +678,38 @@
                     </div>
                     <div>
                         <label>نوع الفقرة:</label>
-                            <select id="segmentSelect">
-                                <option value="quran">آيات من القرآن الكريم</option>
-                                <option value="hadith">حديث شريف</option>
-                                <option value="word">كلمة اليوم</option>
-                                <option value="news">الأخبار المدرسية</option>
-                                <option value="info">معلومة سريعة</option>
-                                <option value="wisdom">حكمة أو قول مأثور</option>
-                                <option value="competition">مسابقة قصيرة</option>
-                                <option value="dialogue">حوار أو مشهد تمثيلي</option>
-                                <option value="poetry">ركن الشعر والإبداع</option>
-                                <option value="facts">هل تعلم؟</option>
-                                <option value="english">كلمة بلغة أجنبية</option>
-                                <option value="history">أحداث هذا اليوم في التاريخ</option>
-                                <option value="tech">فقرة تقنية</option>
-                                <option value="health">الصحة والرياضة</option>
-                                <option value="prayer">الدعاء والخاتمة</option>
-                            </select>
+                        <select id="segmentSelect">
+                            <option value="quran">آيات من القرآن الكريم</option>
+                            <option value="hadith">حديث شريف</option>
+                            <option value="word">كلمة اليوم</option>
+                            <option value="news">الأخبار المدرسية</option>
+                            <option value="info">معلومة سريعة</option>
+                            <option value="wisdom">حكمة أو قول مأثور</option>
+                            <option value="competition">مسابقة قصيرة</option>
+                            <option value="dialogue">حوار أو مشهد تمثيلي</option>
+                            <option value="poetry">ركن الشعر والإبداع</option>
+                            <option value="facts">هل تعلم؟</option>
+                            <option value="english">كلمة بلغة أجنبية</option>
+                            <option value="history">أحداث هذا اليوم في التاريخ</option>
+                            <option value="tech">فقرة تقنية</option>
+                            <option value="health">الصحة والرياضة</option>
+                            <option value="prayer">الدعاء والخاتمة</option>
+                        </select>
                     </div>
                 </div>
 
                 <label>محتوى الفقرة:</label>
                 <textarea id="contentArea" class="content-textarea" placeholder="اكتب المحتوى هنا..."></textarea>
 
-                <div style="text-align:center;margin:15px 0">
-                    <button type="button" class="btn btn-success" onclick="saveContent()">💾 حفظ المحتوى</button>
-                    <button type="button" class="btn btn-warning" onclick="previewWeek()">👁️ معاينة الأسبوع</button>
+                <div style="text-align: center; margin: 20px 0">
+                    <button class="btn btn-success" onclick="saveContent()">💾 حفظ المحتوى</button>
+                    <button class="btn btn-secondary" onclick="previewWeek()">👁️ معاينة الأسبوع</button>
                 </div>
             </div>
 
+            <!-- Records Section -->
             <div class="records-section">
-                <h3>📋 سجل المحتوى المحفوظ</h3>
+                <h3 style="color: var(--primary); margin-bottom: 20px">📋 سجل المحتوى المحفوظ</h3>
                 <div id="recordsList"></div>
             </div>
         </section>
@@ -252,28 +723,34 @@
                 </div>
                 <div class="content-area" id="modalContent"></div>
                 <div class="action-buttons">
-                    <button type="button" class="action-btn print-btn" onclick="printContent()">🖨️ طباعة</button>
-                    <button type="button" class="action-btn assign-btn" onclick="assignToMe()">✋ سأقوم بهذه الفقرة</button>
+                    <button class="action-btn print-btn" onclick="printContent()">🖨️ طباعة</button>
+                    <button class="action-btn assign-btn" onclick="assignToMe()">✋ سأقوم بهذه الفقرة</button>
                 </div>
             </div>
         </div>
 
+        <!-- ===== FOOTER ===== -->
         <footer class="footer">
-            <p>تصميم وتنفيذ: Nawaf Alsubhi</p>
+            <p><strong>تصميم وتنفيذ: Nawaf Alsubhi</strong></p>
+            <p>Design and Implementation: Nawaf Alsubhi</p>
         </footer>
     </div>
 
     <script type="module">
         const { db, auth, signInAnonymously, doc, setDoc, getDoc, getDocs, collection, updateDoc } = window.fb;
 
-        /* ===== UTILS ===== */
-        const daysAr = { sunday: 'الأحد', monday: 'الاثنين', tuesday: 'الثلاثاء', wednesday: 'الأربعاء', thursday: 'الخميس' };
+        /* ===== UTILITIES ===== */
+        const daysAr = { 
+            sunday: 'الأحد', monday: 'الاثنين', tuesday: 'الثلاثاء', 
+            wednesday: 'الأربعاء', thursday: 'الخميس' 
+        };
+        
         const segmentsAr = {
-            quran: 'آيات من القرآن الكريم', hadith: 'حديث شريف', word: 'كلمة اليوم', news: 'الأخبار المدرسية',
-            info: 'معلومة سريعة', wisdom: 'حكمة أو قول مأثور', competition: 'مسابقة قصيرة',
-            dialogue: 'حوار أو مشهد تمثيلي', poetry: 'ركن الشعر والإبداع', facts: 'هل تعلم؟',
-            english: 'كلمة بلغة أجنبية', history: 'أحداث هذا اليوم في التاريخ', tech: 'فقرة تقنية',
-            health: 'الصحة والرياضة', prayer: 'الدعاء والخاتمة'
+            quran: 'آيات من القرآن الكريم', hadith: 'حديث شريف', word: 'كلمة اليوم', 
+            news: 'الأخبار المدرسية', info: 'معلومة سريعة', wisdom: 'حكمة أو قول مأثور', 
+            competition: 'مسابقة قصيرة', dialogue: 'حوار أو مشهد تمثيلي', poetry: 'ركن الشعر والإبداع', 
+            facts: 'هل تعلم؟', english: 'كلمة بلغة أجنبية', history: 'أحداث هذا اليوم في التاريخ', 
+            tech: 'فقرة تقنية', health: 'الصحة والرياضة', prayer: 'الدعاء والخاتمة'
         };
 
         function getWeekNumber() {
@@ -282,10 +759,21 @@
             return Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
         }
 
-        /* ===== STATE ===== */
-        let currentUser = null, currentRole = null, currentUserId = null, weekContent = {};
+        function getDateForDay(dayIndex) {
+            const today = new Date();
+            const currentDay = today.getDay();
+            const diff = dayIndex - currentDay;
+            const targetDate = new Date(today.getTime() + diff * 24 * 60 * 60 * 1000);
+            return targetDate.toLocaleDateString('ar-SA');
+        }
 
-        /* ===== AUTH ===== */
+        /* ===== STATE ===== */
+        let currentUser = null;
+        let currentRole = null;
+        let currentUserId = null;
+        let weekContent = {};
+
+        /* ===== AUTHENTICATION ===== */
         window.showLoginForm = role => {
             document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
             document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
@@ -296,39 +784,81 @@
         window.login = async role => {
             try {
                 if (role === 'teacher') {
-                    const username = document.getElementById('teacherUsername').value.trim().toLowerCase();
+                    const username = document.getElementById('teacherUsername').value.trim();
                     const password = document.getElementById('teacherPassword').value.trim();
-                    if (!username || password.length !== 6) return alert('أدخل اسم المستخدم و6 خانات بالضبط');
+                    
+                    console.log('Login attempt - Username:', username, 'Password:', password);
+                    
+                    if (!username || password.length !== 6) {
+                        return alert('أدخل اسم المستخدم و6 خانات بالضبط');
+                    }
 
                     const teacherRef = doc(db, 'settings', 'teacher');
                     const snap = await getDoc(teacherRef);
-                    if (!snap.exists()) await setDoc(teacherRef, { secretCode: 'A2025A', username: 'abdullah' }, { merge: true });
+                    
+                    if (!snap.exists()) {
+                        await setDoc(teacherRef, { 
+                            secretCode: 'A2025A', 
+                            username: 'abdullah' 
+                        }, { merge: true });
+                    }
 
-                    const correct = (await getDoc(teacherRef)).data().secretCode;
-                    if (username === 'abdullah' && password === correct) {
+                    const data = (await getDoc(teacherRef)).data();
+                    const correctPassword = data.secretCode;
+                    const correctUsername = data.username;
+                    
+                    console.log('Stored - Username:', correctUsername, 'Password:', correctPassword);
+
+                    // التحقق من اسم المستخدم مع مرونة
+                    const validUsernames = ['abdullah', 'عبد الله الحربي', 'عبدالله الحربي'];
+                    const isUsernameValid = validUsernames.includes(username.toLowerCase()) || 
+                                          username === correctUsername;
+                    
+                    const isPasswordValid = password === correctPassword;
+
+                    console.log('Validation - Username valid:', isUsernameValid, 'Password valid:', isPasswordValid);
+
+                    if (isUsernameValid && isPasswordValid) {
                         await signInAnonymously(auth);
-                        currentUser = username; currentRole = 'teacher'; currentUserId = auth.currentUser.uid;
+                        currentUser = username; 
+                        currentRole = 'teacher'; 
+                        currentUserId = auth.currentUser.uid;
                         showDashboard('teacher');
                         await loadWeekContent();
                         await loadPasswords();
-                    } else alert('اسم المستخدم أو الرقم السري خاطئ');
+                        console.log('Login successful');
+                    } else {
+                        alert('اسم المستخدم أو الرقم السري خاطئ');
+                    }
                 } else {
+                    // Student login
                     const name = document.getElementById('studentName').value.trim();
                     const grade = document.getElementById('studentGrade').value.trim();
                     const password = document.getElementById('studentPassword').value.trim().toUpperCase();
-                    if (!name || !grade || !/^[A-Z]{2}\d{2}$/.test(password)) return alert('أدخل جميع البيانات بصيغة صحيحة');
+                    
+                    if (!name || !grade || !/^[A-Z]{2}\d{2}$/.test(password)) {
+                        return alert('أدخل جميع البيانات بصيغة صحيحة');
+                    }
 
                     const weekRef = doc(db, 'settings', 'weekPassword');
                     const weekSnap = await getDoc(weekRef);
-                    if (!weekSnap.exists() || weekSnap.data().password !== password || weekSnap.data().weekNumber !== getWeekNumber()) return alert('كلمة المرور الأسبوعية خاطئة');
+                    
+                    if (!weekSnap.exists() || 
+                        weekSnap.data().password !== password || 
+                        weekSnap.data().weekNumber !== getWeekNumber()) {
+                        return alert('كلمة المرور الأسبوعية خاطئة');
+                    }
 
                     await signInAnonymously(auth);
-                    currentUser = name; currentRole = 'student'; currentUserId = auth.currentUser.uid;
+                    currentUser = name; 
+                    currentRole = 'student'; 
+                    currentUserId = auth.currentUser.uid;
                     showDashboard('student');
                     await loadWeekContent();
                     generateWeekDays();
                 }
             } catch (e) {
+                console.error('Login error:', e);
                 alert('خطأ في تسجيل الدخول: ' + e.message);
             }
         };
@@ -340,163 +870,420 @@
         }
 
         document.getElementById('logoutBtn').onclick = async () => {
-            await auth.signOut();
-            location.reload();
+            try {
+                await auth.signOut();
+                currentUser = null;
+                currentRole = null;
+                currentUserId = null;
+                location.reload();
+            } catch (e) {
+                console.error('Logout error:', e);
+                location.reload();
+            }
         };
 
-        /* ===== PASSWORDS ===== */
+        /* ===== PASSWORD MANAGEMENT ===== */
         window.updateTeacherPassword = async () => {
+            const { db, doc, setDoc } = window.fb;
             const val = document.getElementById('newTeacherPassword').value.trim();
             if (val.length !== 6) return alert('6 خانات بالضبط');
-            await setDoc(doc(db, 'settings', 'teacher'), { secretCode: val }, { merge: true });
-            alert('تم تحديث الرقم السري');
-            document.getElementById('newTeacherPassword').value = '';
+            
+            try {
+                await setDoc(doc(db, 'settings', 'teacher'), { secretCode: val }, { merge: true });
+                alert('تم تحديث الرقم السري');
+                document.getElementById('newTeacherPassword').value = '';
+            } catch (e) {
+                alert('خطأ في التحديث: ' + e.message);
+            }
         };
 
         window.generateNewWeekPassword = () => {
             const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             const nums = '0123456789';
-            const pwd = letters[Math.floor(Math.random() * 26)] + letters[Math.floor(Math.random() * 26)] + nums[Math.floor(Math.random() * 10)] + nums[Math.floor(Math.random() * 10)];
+            const pwd = letters[Math.floor(Math.random() * 26)] + 
+                       letters[Math.floor(Math.random() * 26)] + 
+                       nums[Math.floor(Math.random() * 10)] + 
+                       nums[Math.floor(Math.random() * 10)];
             document.getElementById('newStudentPassword').value = pwd;
         };
 
         window.updateWeekPassword = async () => {
+            const { db, doc, setDoc } = window.fb;
             const val = document.getElementById('newStudentPassword').value.trim().toUpperCase();
-            if (!/^[A-Z]{2}\d{2}$/.test(val)) return alert('صيغة خاطئة');
-            await setDoc(doc(db, 'settings', 'weekPassword'), { password: val, weekNumber: getWeekNumber(), createdAt: new Date().toISOString() }, { merge: true });
-            document.getElementById('currentWeekPassword').textContent = val;
-            document.getElementById('newStudentPassword').value = '';
-            alert('تم حفظ كلمة المرور الأسبوعية');
+            if (!/^[A-Z]{2}\d{2}$/.test(val)) return alert('صيغة خاطئة - يجب حرفين + رقمين');
+            
+            try {
+                await setDoc(doc(db, 'settings', 'weekPassword'), { 
+                    password: val, 
+                    weekNumber: getWeekNumber(), 
+                    createdAt: new Date().toISOString() 
+                }, { merge: true });
+                
+                document.getElementById('currentWeekPassword').textContent = val;
+                document.getElementById('newStudentPassword').value = '';
+                alert('تم حفظ كلمة المرور الأسبوعية');
+            } catch (e) {
+                alert('خطأ في الحفظ: ' + e.message);
+            }
         };
-
-        async function loadPasswords() {
-            const weekSnap = await getDoc(doc(db, 'settings', 'weekPassword'));
-            if (weekSnap.exists()) {
-                document.getElementById('currentWeekPassword').textContent = weekSnap.data().password;
-                document.getElementById('currentWeekNumber').textContent = weekSnap.data().weekNumber;
-            } else document.getElementById('currentWeekNumber').textContent = getWeekNumber();
-        }
 
         window.printWeekPasswords = () => {
             const pwd = document.getElementById('currentWeekPassword').textContent;
-            const wk = getWeekNumber();
+            const wk = document.getElementById('currentWeekNumber').textContent;
             const win = window.open('', '', 'width=600,height=400');
-            win.document.write(`<html dir="rtl"><head><title>كلمات المرور</title></head><body style="font-family:Arial;text-align:center;padding:30px">
-            <h1>كلمة المرور الأسبوعية</h1><h2>الأسبوع رقم ${wk}</h2><h1 style="color:#007a3d">${pwd}</h1>
-            <p>تاريخ الطباعة: ${new Date().toLocaleString('ar-SA')}</p></body></html>`);
+            win.document.write(`
+                <html dir="rtl">
+                <head>
+                    <title>كلمات المرور الأسبوعية</title>
+                    <style>
+                        body { font-family: Arial; text-align: center; padding: 30px; }
+                        h1 { color: #1e3a5f; }
+                        .password { font-size: 2em; color: #48bb78; margin: 20px 0; }
+                    </style>
+                </head>
+                <body>
+                    <h1>كلمة المرور الأسبوعية</h1>
+                    <h2>الأسبوع رقم ${wk}</h2>
+                    <div class="password">${pwd}</div>
+                    <p>مدرسة متوسطة المنذر بن عمرو الأنصاري</p>
+                    <p>رائد النشاط: الأستاذ عبد الله الحربي</p>
+                    <p>تاريخ الطباعة: ${new Date().toLocaleString('ar-SA')}</p>
+                </body>
+                </html>
+            `);
             win.document.close();
             win.print();
         };
 
-        /* ===== CONTENT ===== -->
+        /* ===== CONTENT MANAGEMENT ===== */
         window.saveContent = async () => {
+            const { db, doc, setDoc } = window.fb;
             const day = document.getElementById('daySelect').value;
             const segment = document.getElementById('segmentSelect').value;
             const content = document.getElementById('contentArea').value.trim();
+            
             if (!content) return alert('أدخل المحتوى');
 
-            await setDoc(doc(db, 'weekContent', `${day}_${segment}`), {
-                content, assigned: false, assignedTo: null, createdAt: new Date().toISOString(), createdBy: currentUser, day, segment
-            });
-            if (!weekContent[day]) weekContent[day] = {};
-            weekContent[day][segment] = { content, assigned: false, assignedTo: null };
-            document.getElementById('contentArea').value = '';
-            alert('تم الحفظ');
+            try {
+                await setDoc(doc(db, 'weekContent', `${day}_${segment}`), {
+                    content, 
+                    assigned: false, 
+                    assignedTo: null, 
+                    createdAt: new Date().toISOString(), 
+                    createdBy: currentUser, 
+                    day, 
+                    segment
+                });
+                
+                if (!weekContent[day]) weekContent[day] = {};
+                weekContent[day][segment] = { content, assigned: false, assignedTo: null };
+                
+                document.getElementById('contentArea').value = '';
+                alert('تم الحفظ بنجاح');
+            } catch (e) {
+                alert('خطأ في الحفظ: ' + e.message);
+            }
         };
 
         window.previewWeek = () => {
-            let html = '<h3>معاينة الأسبوع</h3>';
-            for (const d of ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday']) {
-                html += `<div style="margin:15px 0;padding:15px;background:#f0f9f4;border-radius:8px"><h4>${daysAr[d]}</h4>`;
-                if (weekContent[d]) {
-                    for (const seg in weekContent[d]) {
+            let html = '<h3>معاينة الأسبوع</h3><br>';
+            
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday'];
+            days.forEach(d => {
+                html += `<div style="margin:20px 0;padding:20px;background:#f8fafe;border-radius:10px;border:1px solid #cbd5e0">`;
+                html += `<h4 style="color:#1e3a5f;border-bottom:2px solid #1e3a5f;padding-bottom:10px">${daysAr[d]}</h4>`;
+                
+                if (weekContent[d] && Object.keys(weekContent[d]).length > 0) {
+                    Object.keys(weekContent[d]).forEach(seg => {
                         const item = weekContent[d][seg];
-                        html += `<div style="margin:8px 0"><strong>${segmentsAr[seg]}</strong>: ${item.content.substring(0, 100)}... ${item.assigned ? '✅' : '⚠️'}</div>`;
-                    }
-                } else html += '<p>لا محتوى</p>';
+                        html += `
+                            <div style="margin:15px 0;padding:15px;background:white;border-radius:8px;border-right:4px solid #48bb78">
+                                <strong style="color:#48bb78">${segmentsAr[seg]}:</strong>
+                                <p style="margin:10px 0;line-height:1.6">${item.content.substring(0, 150)}${item.content.length > 150 ? '...' : ''}</p>
+                                ${item.assigned ? `<small style="color:#1e3a5f">✅ مُكلف: ${item.assignedTo}</small>` : '<small style="color:#e53e3e">⚠️ غير مُكلف</small>'}
+                            </div>
+                        `;
+                    });
+                } else {
+                    html += '<p style="color:#718096;font-style:italic">لم يتم إضافة محتوى لهذا اليوم</p>';
+                }
                 html += '</div>';
-            }
+            });
+            
             showModal('معاينة الأسبوع', html);
         };
 
-        async function loadWeekContent() {
-            const snap = await getDocs(collection(db, 'weekContent'));
-            weekContent = {};
-            snap.forEach(d => {
-                const [day, seg] = d.id.split('_');
-                if (!weekContent[day]) weekContent[day] = {};
-                weekContent[day][seg] = d.data();
-            });
-        }
-
-        /* ===== STUDENT ===== -->
-        function generateWeekDays() {
-            const container = document.getElementById('weekDays');
-            container.innerHTML = '';
-            const today = new Date().getDay();
-            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday'];
-            days.forEach((d, i) => {
-                const isToday = (today === i || (today === 0 && i === 0));
-                const segments = weekContent[d] || {};
-                const lis = Object.keys(segments).map(s => `
-                    <li class="segment-item ${segments[s].assigned ? 'assigned' : ''}" onclick="event.stopPropagation(); showSegmentContent('${d}', '${s}')">
-                        ${segmentsAr[s]} ${segments[s].assigned ? '✅' : ''}
-                    </li>`).join('');
-                container.innerHTML += `
-                    <div class="day-card ${isToday ? 'today' : ''}" onclick="showDayContent('${d}')">
-                        <div class="day-header"><div class="day-name">${daysAr[d]} ${isToday ? '(اليوم)' : ''}</div></div>
-                        <ul class="segments-list">${lis || '<li class="segment-item">لا محتوى</li>'}</ul>
-                    </div>`;
-            });
-        }
-
+        /* ===== STUDENT DASHBOARD ===== */
         window.showDayContent = day => {
             const segs = weekContent[day];
-            if (!segs) return alert('لا محتوى لهذا اليوم');
-            let html = `<h3>إذاعة ${daysAr[day]}</h3>`;
-            for (const s in segs) html += `<div style="margin:10px 0"><h4>${segmentsAr[s]}</h4><p>${segs[s].content}</p></div>`;
-            showModal('إذاعة ' + daysAr[day], html);
+            if (!segs || Object.keys(segs).length === 0) {
+                return alert('لم يتم إضافة محتوى لهذا اليوم بعد');
+            }
+            
+            let html = `<h3>محتوى إذاعة يوم ${daysAr[day]}</h3><br>`;
+            Object.keys(segs).forEach(s => {
+                const item = segs[s];
+                html += `
+                    <div style="margin:20px 0;padding:15px;background:#f8fafe;border-radius:10px;border-right:4px solid #3182ce">
+                        <h4 style="color:#1e3a5f;margin-bottom:10px">${segmentsAr[s]}</h4>
+                        <p style="line-height:1.6">${item.content}</p>
+                        ${item.assigned ? `<p style="color:#48bb78;font-weight:bold;margin-top:10px">✅ مُكلف: ${item.assignedTo}</p>` : ''}
+                    </div>
+                `;
+            });
+            showModal(`إذاعة يوم ${daysAr[day]}`, html);
         };
 
         window.showSegmentContent = (day, seg) => {
             const item = weekContent[day][seg];
-            if (!item) return;
+            if (!item) return alert('لم يتم إضافة محتوى لهذه الفقرة بعد');
+            
             window.currentSelection = { day, segmentKey: seg };
-            showModal(segmentsAr[seg], `<p><strong>يوم ${daysAr[day]}</strong></p><div style="line-height:1.8">${item.content}</div>${item.assigned ? `<p style="margin-top:10px;color:#28a745">✅ مُكلف: ${item.assignedTo}</p>` : ''}`);
+            
+            const content = `
+                <div style="padding:20px;background:#f8fafe;border-radius:10px;margin:10px 0">
+                    <h4 style="color:#1e3a5f;margin-bottom:15px">يوم ${daysAr[day]}</h4>
+                    <div style="line-height:1.8;font-size:1.1em">${item.content}</div>
+                    ${item.assigned ? `
+                        <div style="margin-top:15px;padding:10px;background:#d4edda;border-radius:5px;color:#155724">
+                            <strong>✅ هذه الفقرة مُكلف بها: ${item.assignedTo}</strong>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            showModal(segmentsAr[seg], content);
         };
 
-        function showModal(title, body) {
-            document.getElementById('modalTitle').innerHTML = title;
-            document.getElementById('modalContent').innerHTML = body;
-            document.getElementById('contentModal').classList.add('active');
-        }
-        window.closeModal = () => document.getElementById('contentModal').classList.remove('active');
+        /* ===== MODAL FUNCTIONS ===== */
+        window.closeModal = () => {
+            document.getElementById('contentModal').classList.remove('active');
+            window.currentSelection = null;
+        };
 
         window.printContent = () => {
             const title = document.getElementById('modalTitle').innerHTML;
             const body = document.getElementById('modalContent').innerHTML;
             const win = window.open('', '', 'width=700,height=600');
-            win.document.write(`<html dir="rtl"><head><title>${title}</title></head><body style="font-family:Arial;padding:20px;line-height:1.8">${body}</body></html>`);
+            win.document.write(`
+                <html dir="rtl">
+                <head>
+                    <title>${title}</title>
+                    <style>
+                        body { font-family: Arial; padding: 20px; line-height: 1.8; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1e3a5f; padding-bottom: 15px; }
+                        h1 { color: #1e3a5f; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>${title}</h1>
+                        <p>مدرسة متوسطة المنذر بن عمرو الأنصاري</p>
+                        <p>إعداد: رائد النشاط عبد الله الحربي</p>
+                    </div>
+                    ${body}
+                </body>
+                </html>
+            `);
             win.document.close();
             win.print();
         };
 
         window.assignToMe = async () => {
-            if (!window.currentSelection) return;
+            if (!window.currentSelection || !currentUser) return;
+            
             const { day, segmentKey } = window.currentSelection;
-            await updateDoc(doc(db, 'weekContent', `${day}_${segmentKey}`), { assigned: true, assignedTo: currentUser, assignedAt: new Date().toISOString() });
-            weekContent[day][segmentKey].assigned = true;
-            weekContent[day][segmentKey].assignedTo = currentUser;
-            alert('تم تكليفك بالفقرة');
-            closeModal();
-            if (currentRole === 'student') generateWeekDays();
+            const { db, doc, updateDoc } = window.fb;
+            
+            try {
+                await updateDoc(doc(db, 'weekContent', `${day}_${segmentKey}`), {
+                    assigned: true,
+                    assignedTo: currentUser,
+                    assignedAt: new Date().toISOString()
+                });
+                
+                if (weekContent[day] && weekContent[day][segmentKey]) {
+                    weekContent[day][segmentKey].assigned = true;
+                    weekContent[day][segmentKey].assignedTo = currentUser;
+                }
+                
+                alert(`تم تكليفك بفقرة "${segmentsAr[segmentKey]}" ليوم ${daysAr[day]}`);
+                window.closeModal();
+                
+                if (currentRole === 'student') {
+                    await loadWeekContent();
+                    generateWeekDays();
+                }
+            } catch (e) {
+                alert('خطأ في التكليف: ' + e.message);
+            }
+        };
+        }
+
+        window.showDayContent = day => {
+            const segs = weekContent[day];
+            if (!segs || Object.keys(segs).length === 0) {
+                return alert('لم يتم إضافة محتوى لهذا اليوم بعد');
+            }
+            
+            let html = `<h3>محتوى إذاعة يوم ${daysAr[day]}</h3><br>`;
+            Object.keys(segs).forEach(s => {
+                const item = segs[s];
+                html += `
+                    <div style="margin:20px 0;padding:15px;background:#f8fafe;border-radius:10px;border-right:4px solid #3182ce">
+                        <h4 style="color:#1e3a5f;margin-bottom:10px">${segmentsAr[s]}</h4>
+                        <p style="line-height:1.6">${item.content}</p>
+                        ${item.assigned ? `<p style="color:#48bb78;font-weight:bold;margin-top:10px">✅ مُكلف: ${item.assignedTo}</p>` : ''}
+                    </div>
+                `;
+            });
+            showModal(`إذاعة يوم ${daysAr[day]}`, html);
         };
 
-        /* ===== INIT ===== -->
+        window.showSegmentContent = (day, seg) => {
+            const item = weekContent[day][seg];
+            if (!item) return alert('لم يتم إضافة محتوى لهذه الفقرة بعد');
+            
+            window.currentSelection = { day, segmentKey: seg };
+            
+            const content = `
+                <div style="padding:20px;background:#f8fafe;border-radius:10px;margin:10px 0">
+                    <h4 style="color:#1e3a5f;margin-bottom:15px">يوم ${daysAr[day]}</h4>
+                    <div style="line-height:1.8;font-size:1.1em">${item.content}</div>
+                    ${item.assigned ? `
+                        <div style="margin-top:15px;padding:10px;background:#d4edda;border-radius:5px;color:#155724">
+                            <strong>✅ هذه الفقرة مُكلف بها: ${item.assignedTo}</strong>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            showModal(segmentsAr[seg], content);
+        };
+
+        /* ===== MODAL FUNCTIONS ===== */
+        function showModal(title, body) {
+            document.getElementById('modalTitle').innerHTML = title;
+            document.getElementById('modalContent').innerHTML = body;
+            document.getElementById('contentModal').classList.add('active');
+        }
+
+        window.closeModal = () => {
+            document.getElementById('contentModal').classList.remove('active');
+            window.currentSelection = null;
+        };
+
+        window.printContent = () => {
+            const title = document.getElementById('modalTitle').innerHTML;
+            const body = document.getElementById('modalContent').innerHTML;
+            const win = window.open('', '', 'width=700,height=600');
+            win.document.write(`
+                <html dir="rtl">
+                <head>
+                    <title>${title}</title>
+                    <style>
+                        body { font-family: Arial; padding: 20px; line-height: 1.8; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1e3a5f; padding-bottom: 15px; }
+                        h1 { color: #1e3a5f; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>${title}</h1>
+                        <p>مدرسة متوسطة المنذر بن عمرو الأنصاري</p>
+                        <p>إعداد: رائد النشاط عبد الله الحربي</p>
+                    </div>
+                    ${body}
+                </body>
+                </html>
+            `);
+            win.document.close();
+            win.print();
+        };
+
+        window.assignToMe = async () => {
+            if (!window.currentSelection || !currentUser) return;
+            
+            const { day, segmentKey } = window.currentSelection;
+            
+            try {
+                await updateDoc(doc(db, 'weekContent', `${day}_${segmentKey}`), {
+                    assigned: true,
+                    assignedTo: currentUser,
+                    assignedAt: new Date().toISOString()
+                });
+                
+                if (weekContent[day] && weekContent[day][segmentKey]) {
+                    weekContent[day][segmentKey].assigned = true;
+                    weekContent[day][segmentKey].assignedTo = currentUser;
+                }
+                
+                alert(`تم تكليفك بفقرة "${segmentsAr[segmentKey]}" ليوم ${daysAr[day]}`);
+                closeModal();
+                
+                if (currentRole === 'student') {
+                    await loadWeekContent();
+                    generateWeekDays();
+                }
+            } catch (e) {
+                alert('خطأ في التكليف: ' + e.message);
+            }
+        };
+
+        /* ===== EVENT LISTENERS ===== */
+        document.getElementById('contentModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                if (document.getElementById('contentModal').classList.contains('active')) {
+                    printContent();
+                }
+            }
+        });
+
+        /* ===== INITIALIZATION ===== */
         (async () => {
-            await loadWeekContent();
-            document.getElementById('currentWeekNumber').textContent = getWeekNumber();
+            try {
+                await loadWeekContent();
+                await loadPasswords();
+                
+                // Initialize sample content if needed
+                const snap = await getDocs(collection(db, 'weekContent'));
+                if (snap.empty) {
+                    console.log('Initializing sample content...');
+                    const sampleContent = {
+                        'sunday_quran': {
+                            content: 'بسم الله الرحمن الرحيم\n"وَقُلْ رَبِّ زِدْنِي عِلْمًا"\nصدق الله العظيم',
+                            assigned: false, assignedTo: null, createdAt: new Date().toISOString(),
+                            createdBy: 'abdullah', day: 'sunday', segment: 'quran'
+                        },
+                        'sunday_hadith': {
+                            content: 'قال رسول الله صلى الله عليه وسلم:\n"طلب العلم فريضة على كل مسلم"\nصدق رسول الله صلى الله عليه وسلم',
+                            assigned: false, assignedTo: null, createdAt: new Date().toISOString(),
+                            createdBy: 'abdullah', day: 'sunday', segment: 'hadith'
+                        }
+                    };
+                    
+                    for (const [key, value] of Object.entries(sampleContent)) {
+                        await setDoc(doc(db, 'weekContent', key), value);
+                    }
+                    await loadWeekContent();
+                }
+                
+                console.log('App initialized successfully');
+            } catch (e) {
+                console.error('Initialization error:', e);
+            }
         })();
+        
+        
     </script>
 </body>
 </html>
+
