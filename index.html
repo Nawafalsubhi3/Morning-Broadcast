@@ -124,7 +124,7 @@
                     <label>الرقم السري (6 خانات):</label>
                     <input type="password" id="teacherPassword" placeholder="A2025A">
                 </div>
-                <button class="login-btn" onclick="login('teacher')">دخول</button>
+                <button type="button" class="login-btn" onclick="login('teacher')">دخول</button>
             </div>
 
             <div class="login-form" id="studentLogin">
@@ -141,7 +141,7 @@
                     <label>كلمة المرور الأسبوعية (حرفين + رقمين):</label>
                     <input type="text" id="studentPassword" placeholder="AB12" style="text-transform:uppercase">
                 </div>
-                <button class="login-btn" onclick="login('student')">دخول</button>
+                <button type="button" class="login-btn" onclick="login('student')">دخول</button>
             </div>
         </section>
 
@@ -232,8 +232,8 @@
                 <textarea id="contentArea" class="content-textarea" placeholder="اكتب المحتوى هنا..."></textarea>
 
                 <div style="text-align:center;margin:15px 0">
-                    <button class="btn btn-success" onclick="saveContent()">💾 حفظ المحتوى</button>
-                    <button class="btn btn-warning" onclick="previewWeek()">👁️ معاينة الأسبوع</button>
+                    <button type="button" class="btn btn-success" onclick="saveContent()">💾 حفظ المحتوى</button>
+                    <button type="button" class="btn btn-warning" onclick="previewWeek()">👁️ معاينة الأسبوع</button>
                 </div>
             </div>
 
@@ -252,8 +252,8 @@
                 </div>
                 <div class="content-area" id="modalContent"></div>
                 <div class="action-buttons">
-                    <button class="action-btn print-btn" onclick="printContent()">🖨️ طباعة</button>
-                    <button class="action-btn assign-btn" onclick="assignToMe()">✋ سأقوم بهذه الفقرة</button>
+                    <button type="button" class="action-btn print-btn" onclick="printContent()">🖨️ طباعة</button>
+                    <button type="button" class="action-btn assign-btn" onclick="assignToMe()">✋ سأقوم بهذه الفقرة</button>
                 </div>
             </div>
         </div>
@@ -388,7 +388,7 @@
             win.print();
         };
 
-        /* ===== CONTENT ===== */
+        /* ===== CONTENT ===== -->
         window.saveContent = async () => {
             const day = document.getElementById('daySelect').value;
             const segment = document.getElementById('segmentSelect').value;
@@ -429,7 +429,7 @@
             });
         }
 
-        /* ===== STUDENT ===== */
+        /* ===== STUDENT ===== -->
         function generateWeekDays() {
             const container = document.getElementById('weekDays');
             container.innerHTML = '';
