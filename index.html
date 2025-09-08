@@ -1362,6 +1362,10 @@
             if (daySelect) {
                 daySelect.value = todayKey;
             }
+            
+            // Initialize role buttons
+            document.querySelector('.role-btn.teacher').onclick = () => showLoginForm('teacher');
+            document.querySelector('.role-btn.student').onclick = () => showLoginForm('student');
         });
 
         // Close modal when clicking outside
